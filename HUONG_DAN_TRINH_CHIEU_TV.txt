@@ -1,0 +1,52 @@
+VISIONBOT 3D - HUONG DAN TRINH CHIEU TREN TIVI / LAPTOP
+=======================================================
+
+1. KET NOI TV
+   - Cam HDMI laptop -> TV (nen dung cap, khong can Wi-Fi).
+   - Windows + P -> "Duplicate/Nhan doi" de ca laptop va TV hien cung noi dung.
+   - Chon do phan giai 1920x1080, ti le 16:9 neu TV ho tro.
+
+2. BAT WEB VA TRINH CHIEU
+   - Mo VisionBot tai dia chi Vercel cua du an.
+   - Bam muc "BGK 5 phut" hoac nut "TRINH CHIEU TV" trong mo hinh 3D.
+   - Bam "Toan man" hoac phim P de duoc khung hinh lon nhat.
+
+3. CACH GIAI THICH LINH KIEN
+   - Buoc 1: mat truoc san pham.
+   - Buoc 2: tach 3 lop vo de nhin thiet bi ben trong.
+   - Buoc 3: zoom bo ESP32-S3-CAM va cap camera FPC.
+
+4. CACH GIAI THICH DAY NOI (QUAN TRONG NHAT)
+   - Buoc 4: chon TFT/SPI, MIC/I2S, LOA/I2S.
+   - Buoc 5: chon PIN/5V; co the chon NUT NHAN.
+   - Nhap chuot vao mot dong day de zoom den dung hai dau noi.
+   - Bang chu lon hien "TU THIET BI / CHAN -> DEN THIET BI / CHAN".
+   - Bam "Day truoc" / "Day tiep" hoac phim [ va ] de doi day.
+   - Mau sac day va 2 dau neo sang len cho BGK theo doi.
+
+5. PHIM TAT
+   Mui ten trai/phai: doi buoc (1-7).
+   1..7: den buoc chi dinh.
+   [ / ]: doi day trong nhom.
+   + / -: zoom; Space: tach/nhap vo; R: reset; P: fullscreen.
+
+6. KHI MAY TINH YEU
+   - Bam 2D de xem so do ket noi thay vi render 3D.
+   - Tat cac tab trinh duyet khong can thiet, dat Zoom trinh duyet 100%.
+   - Neu ho truong co Wi-Fi kem, minh hoa 3D/2D van khong can API key.
+
+7. LUU Y KHOA HOC
+   - Website chi minh hoa de hoc sinh thuyet trinh ve robot that.
+   - Sơ do GPIO la cau hinh DE XUAT, can doi chieu firmware va bo mach that.
+   - Thu nghiem, OCR/detect demos va do chinh xac tren web co the la du lieu
+     mo phong: khong dung thay bang chung thuc nghiem.
+
+8. CAP NHAT GITHUB
+   - Giai nen ZIP, lay TAT CA cac tep va thu muc trong visionbot-3d.
+   - Vao repo Khkt_2627, tai len thay the files src/, public/, scripts/ ...
+   - Commit len nhanh main; xem Vercel Build Logs, kiem tra trang web.
+   - Tren laptop co Node.js va Internet, nen chay:
+       npm install
+       npm run check:connections
+       npm run typecheck
+       npm run build

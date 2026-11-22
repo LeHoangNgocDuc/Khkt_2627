@@ -21,6 +21,10 @@ export interface SceneProps {
   focusSerial:number;
   status:string;
   dark:boolean;
+  /** TV mode: thicker, high-contrast wires and emphasis on selected routes. */
+  projection?:boolean;
+  /** >1 brings the camera nearer to the selected target (clamped). */
+  zoomLevel?:number;
   onSelectPart:(id:ComponentId)=>void;
   onSelectWire:(id:string)=>void;
   onPinSelect:(id:ComponentId,pin:PinId)=>void;
@@ -64,10 +68,12 @@ function CameraMotion({p}:{p:SceneProps}){
       const anchor=PARTS[p.selectedPin.id].pinAnchors[p.selectedPin.pin];
       if(anchor){look=[s[0]+anchor[0],s[1]+anchor[1],s[2]+anchor[2]];cam=[look[0]+.6,look[1]+.45,look[2]+3.0];}
     }
+    const k=Math.min(1.8,Math.max(.72,p.zoomLevel??1));
+    cam=[look[0]+(cam[0]-look[0])/k,look[1]+(cam[1]-look[1])/k,look[2]+(cam[2]-look[2])/k];
     targetPosition.current.set(...cam);
     targetLook.current.set(...look);
     moving.current=true;
-  },[p.preset,p.focusSerial,p.selectedPart,p.selectedWire,p.selectedPin,p.explode]);
+  },[p.preset,p.focusSerial,p.selectedPart,p.selectedWire,p.selectedPin,p.explode,p.zoomLevel]);
   useFrame((_,delta)=>{
     if(!orbit.current)return;
     if(moving.current){
@@ -108,13 +114,13 @@ function World({p}:{p:SceneProps}){
         </group>;
       })}
       <WireBundle explode={p.explode} selectedWire={p.selectedWire} selectedPart={p.selectedPart} activeGroups={p.activeGroups}
-        flow={p.showFlow} visible={p.showWires} onSelectWire={p.onSelectWire}/>
+        flow={p.showFlow} visible={p.showWires} projection={p.projection} onSelectWire={p.onSelectWire}/>
     </group>
     <ContactShadows position={[0,-4.10,-.8]} opacity={p.dark?.35:.24} width={28} height={15} blur={2.5} far={11}/>
   </>;
 }
 export function VisionScene(p:SceneProps){
-  return <Canvas dpr={[1,1.7]} shadows gl={{antialias:true,powerPreference:'high-performance',toneMapping:ACESFilmicToneMapping}}>
+  return <Canvas dpr={p.projection?[1,1.9]:[1,1.7]} shadows gl={{antialias:true,powerPreference:'high-performance',toneMapping:ACESFilmicToneMapping}}>
     <PerspectiveCamera makeDefault position={[10.3,5.9,19.0]} fov={42} near={.05} far={120}/>
     <Suspense fallback={null}><World p={p}/></Suspense>
     <CameraMotion p={p}/>

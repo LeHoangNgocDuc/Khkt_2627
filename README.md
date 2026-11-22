@@ -1,3 +1,44 @@
+# VISIONBOT – TRỢ LÝ THUYẾT TRÌNH KỸ THUẬT 3D
+
+**Đơn vị:** TRƯỜNG THCS NAM NHA TRANG – PHÂN HIỆU VĨNH TRƯỜNG.
+
+**Tên đề tài:** VISIONBOT – Nghiên cứu, thiết kế và chế tạo thiết bị trợ lý thị giác ứng dụng trí tuệ nhân tạo hỗ trợ người khiếm thị trong sinh hoạt và học tập.
+
+## CẬP NHẬT PHIÊN BẢN 2.0 – 7 PHÂN KHU
+
+Website gồm 7 phân khu điều hướng trực tiếp: **(1) Giới thiệu, (2) Mô hình 3D, (3) Đấu nối điện, (4) Nguyên lý & Firmware, (5) Demo ngoại tuyến, (6) Kết quả nghiên cứu, (7) Thuyết trình BGK 5 phút.** Rô-bốt thật mới là sản phẩm KHKT; website chỉ minh họa để thuyết trình.
+
+### Bổ sung logo trường nguyên gốc (quan trọng)
+
+Ảnh logo trường được hiển thị mà **không cắt, chỉnh lại hoặc vẽ lại**. Có 2 cách sử dụng:
+
+- **Cách 1 – đề xuất để nộp dự thi/chiếu trên mọi máy:** Đặt đúng ảnh logo trường gốc dạng PNG vào `public/school-logo.png`, sau đó chạy lại `npm run build` hoặc đưa thay đổi lên GitHub để Vercel cập nhật. Ảnh sẽ tự hiển thị ở phần đầu, phần cuối và chế độ thuyết trình. Chỉ sửa tên tệp, không sửa nội dung ảnh.
+- **Cách 2 – thử nhanh tại hội trường:** Bấm **Nạp logo** trên thanh đầu trang, chọn ảnh logo của trường. Trình duyệt giữ ảnh gốc bằng `localStorage` trên **thiết bị hiện tại**. Cách này không tự đưa ảnh vào ZIP, không đồng bộ sang máy khác; khi dùng máy chiếu mới nên chọn cách 1.
+
+Nếu ở chế độ demo chưa có ảnh, web hiển thị ô chữ `LOGO` thay cho biểu trưng. Không xem đó là logo thật.
+
+### Tên trường và đề tài
+
+Sửa đồng loạt trong `src/data/identity.ts` nếu cần. Cả tiêu đề, thanh trường, trang giới thiệu và trang thuyết trình đều dùng chung văn bản này.
+
+### Định hướng mô phỏng / bằng chứng
+
+- Các demo ngoại tuyến chỉ là **kịch bản đã dựng sẵn**, không nhận dạng AI/OCR trực tiếp.
+- Bảng kết quả mặc định ở `src/data/researchResults.ts` là **SỐ LIỆU MẪU**. Bấm `Sửa nhanh số liệu` để nhập số liệu đo thực tế và xuất CSV.
+- Dữ liệu đấu dây nguồn/tín hiệu nằm trong `src/data/circuitData.ts`; cần đối chiếu GPIO với firmware và linh kiện thật trước khi đấu điện.
+- Chế độ trình bày BGK hỗ trợ tiến độ 7 bước, đồng hồ 5 phút, bảng nhắc lời và 10 câu hỏi phản biện; phím `←/→`, `1–7`, `R`, `P` dùng trong chế độ này.
+
+### Các tệp mới quan trọng
+
+- `src/App.tsx`: bộ điều hướng 7 phân khu và chế độ thuyết trình BGK.
+- `src/Workbench.tsx`: mô hình 3D/đấu nối gốc, giữ các chế độ chi tiết cũ.
+- `src/components/SchoolIdentity.tsx`: ảnh logo + chức năng nạp logo mà không thay đổi ảnh gốc.
+- `src/data/identity.ts`: tên trường, phân hiệu và tên đề tài.
+- `src/components/IntroPage.tsx`, `DemoPage.tsx`, `ResultsPage.tsx`, `PresentationPanel.tsx`: bốn màn hình thuyết trình.
+- `src/data/researchResults.ts`, `presentationData.ts`: dữ liệu mẫu và kịch bản BGK.
+
+---
+
 # VISIONBOT 3D – PHÒNG THỰC HÀNH KHKT
 
 Website mô phỏng kết cấu, đấu nối mạch và giải thích nguyên lý VisionBot cho học sinh THCS trình bày trước Ban Giám Khảo cuộc thi KHKT. **Không phải phần mềm nạp firmware hoặc bộ mô phỏng điện áp/dòng điện SPICE.**
@@ -147,3 +188,57 @@ Bảng tổng hợp chính nằm ở `src/data/circuitData.ts`. Đối chiếu *
 - Dự án tham khảo ghép GPIO39/40 I2S: https://github.com/shiuhou/xiao-an-robot/blob/main/hardware/wiring/esp32_pinout.md
 
 **Phiên bản:** 1.0.0 – mô hình giáo dục offline logic (kết nối Internet chỉ để tải thư viện và deploy). Dữ liệu firmware và GPIO lấy từ bản đặc tả cung cấp cho dự án, chưa được đọc lại từ thiết bị thật.
+
+---
+
+## V3.0 - Chế độ trình chiếu rõ nét trên TV / laptop (22/11/2026)
+
+**Mở nhanh**: vào phần **BGK 5 phút** trên website, hoặc bấm nút **TRÌNH CHIẾU TV** phía trên mô hình 3D trong phân khu Cấu tạo / Đấu nối. Chế độ TV tự ẩn điều hướng không cần thiết, tối đa diện tích mô hình. Nếu muốn cửa sổ toàn màn hình thực sự, bấm **Toàn màn** hoặc phím `P`.
+
+**Đấu nối cận cảnh**: chuyển tới **Bước 4 - Đấu dây** hoặc **Bước 5 - Nguồn**. Khi đó màn hình chia 3D bên trái và bảng chân lớn bên phải. Chọn nhóm **TFT/SPI**, **MIC/I2S**, **LOA/I2S**, **PIN/5V**, **NÚT NHẤN** để chỉ hiện các đường dây cần giải thích. Nhấn từng dây để làm sáng cả tuyến, tự zoom và đọc thông tin **TỪ THIẾT BỊ / CHÂN → ĐẾN THIẾT BỊ / CHÂN**, kèm số chân header ESP32 khi có. Có nút **Dây trước / Dây tiếp**, bảng nhắc lời và các nguyên tắc an toàn.
+
+### Phím tắt trên máy tính khi trình chiếu
+
+| Phím | Chức năng |
+|---|---|
+| `←` / `→` | Lùi / tiến tới bước thuyết trình trước hoặc sau |
+| `1`–`7` | Chuyển trực tiếp giữa 7 bước |
+| `[` / `]` | Lùi / tiến một dây khi đang ở bước đấu nối/nguồn |
+| `+` / `-` | Phóng to / thu nhỏ mô hình |
+| `Space` | Ghép vỏ / tách lớp |
+| `R` | Đặt lại góc nhìn và tỷ lệ zoom |
+| `P` | Bật/tắt toàn màn hình trình duyệt |
+
+### Thiết lập hình ảnh khi xuất lên TV hoặc máy chiếu
+
+1. Sử dụng cáp HDMI từ laptop ra màn hình TV nếu có thể để tránh trễ và nhiễu mạng.
+2. Đặt độ phân giải **1920 × 1080 (Full HD)** và tỷ lệ màn hình **16:9** trên Windows khi thiết bị hỗ trợ; với màn hình 1366 × 768, dùng chế độ TV đã tối ưu.
+3. Nhấn `Windows + P`, chọn **Nhân đôi (Duplicate)** nếu học sinh cần thấy màn hình giống TV, hoặc **Mở rộng (Extend)** nếu cần hiển thị tài liệu khác trên laptop.
+4. Mở web trên Chrome hoặc Edge, chọn **BGK 5 phút**, sau đó nhấn `P` hoặc nút **Toàn màn**. Điều chỉnh tỷ lệ trình duyệt 100%, tránh phóng to toàn trang.
+5. Trước cuộc thi, thử lần lượt **TFT/SPI → MIC/I2S → LOA/I2S → PIN/5V**, kiểm tra các chữ GPIO từ vị trí đứng của BGK (2-4m).
+6. Nếu máy tính yếu, bấm **2D** để xem bảng dây/sơ đồ tĩnh thay vì đồ họa WebGL 3D.
+7. Nút **Ghi chú** chỉ mở khi cần xem lời thuyết trình; nên đóng bảng ghi chú trước khi chuyển sang phần mô hình lớn.
+
+**Lưu ý**: cấu hình chân trong website vẫn là phương án đề xuất, không phải đo đạc xác nhận trên VisionBot thật. Sơ đồ 3D là mô hình giáo dục. Không dùng bản mô phỏng này như hướng dẫn an toàn điện hoặc thiết bị hỗ trợ tránh vật cản thời gian thực. Kết quả nghiên cứu là số liệu mẫu cho đến khi thay bằng số liệu đo được.
+
+### Những tệp được cập nhật so với V2
+
+- `src/components/PitchBoardTV.tsx`: khu trình chiếu TV mới, bảng điện nhóm dây, dây đang chọn, nhắc lời và phím tắt.
+- `src/App.tsx`: đưa chế độ mới vào phân khu 7.
+- `src/Workbench.tsx`: thêm nút **TRÌNH CHIẾU TV** trong góc nhìn 3D.
+- `src/scene/VisionScene.tsx`: zoom camera theo mức và truyền cờ trình chiếu.
+- `src/scene/WireBundle.tsx`: dây lớn, sáng hơn; thêm điểm neo đầu/cuối và nhánh chung I2S/nguồn.
+- `src/styles.css`: giao diện tương phản cao, kích thước chữ cho TV và bố cục 16:9 / 1366×768 / điện thoại.
+
+### Xác minh trước khi đưa lên Vercel
+
+Sau khi giải nén hoặc đồng bộ repo mới, trên máy có Internet chạy:
+
+```bash
+npm install
+npm run check:connections
+npm run typecheck
+npm run build
+```
+
+Chỉ triển khai phiên bản mới khi các lệnh trên không báo lỗi. Nếu Vercel tự redeploy khi push lên nhánh `main`, kiểm tra log `Build` và thử mở website ở chế độ TV trên trình duyệt thật trước buổi thi.

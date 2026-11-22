@@ -1,0 +1,1 @@
+Đặt ảnh logo nguyên gốc của trường vào thư mục public và đặt tên: school-logo.png. Không tự thiết kế lại logo, không chỉnh sửa màu sắc/chi tiết.

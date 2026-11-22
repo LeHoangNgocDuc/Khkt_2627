@@ -1,7 +1,7 @@
 {
   "name": "visionbot-3d-stem-lab",
   "private": true,
-  "version": "1.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -18,7 +18,8 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "three": "^0.180.0",
-    "tailwindcss": "^4.1.0"
+    "tailwindcss": "^4.1.0",
+    "recharts": "^3.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

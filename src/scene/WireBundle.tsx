@@ -10,6 +10,7 @@ export interface WireBundleProps {
   activeGroups:WireGroup[]|null;
   flow:boolean;
   visible:boolean;
+  projection?:boolean;
   onSelectWire:(id:string)=>void;
 }
 function WindingWire({w,index,p}: {w:(typeof WIRES)[number],index:number,p:WireBundleProps}){
@@ -24,31 +25,38 @@ function WindingWire({w,index,p}: {w:(typeof WIRES)[number],index:number,p:WireB
     const nearEnd=new Vector3(b.x-Math.sign(b.x-a.x)*.26,b.y,lift);
     return new CatmullRomCurve3([a,nearStart,new Vector3(a.x*.78+b.x*.22,laneY,lift),new Vector3(a.x*.26+b.x*.74,laneY,lift),nearEnd,b],false,'centripetal',.45);
   },[start[0],start[1],start[2],end[0],end[1],end[2],index]);
-  const geom=useMemo(()=>new TubeGeometry(curve,48,.028,8,false),[curve]);
-  const hoverGeom=useMemo(()=>new TubeGeometry(curve,48,.125,7,false),[curve]);
+  const geom=useMemo(()=>new TubeGeometry(curve,60,p.projection?.058:.028,9,false),[curve,p.projection]);
+  const hoverGeom=useMemo(()=>new TubeGeometry(curve,48,p.projection?.17:.125,7,false),[curve,p.projection]);
   useEffect(()=>()=>{geom.dispose();hoverGeom.dispose();},[geom,hoverGeom]);
   const selected=p.selectedWire===w.id;
+  const activeWire=WIRES.find(x=>x.id===p.selectedWire);
+  const sharesTerminal=Boolean(activeWire && ([activeWire.from,activeWire.to].some(point=>
+    [w.from,w.to].some(other=>point.component===other.component && point.pin===other.pin))));
   const relatedPart=p.selectedPart===w.from.component||p.selectedPart===w.to.component;
-  const filtered= !p.activeGroups || p.activeGroups.includes(w.group);
-  const dim=Boolean(p.selectedWire && !selected) || Boolean(p.selectedPart && !relatedPart && !selected);
-  const opacity=!filtered?.055:dim?.09:.93;
+  const filtered= !p.activeGroups || p.activeGroups.includes(w.group) || sharesTerminal;
+  const dim=Boolean(p.selectedWire && !selected && !sharesTerminal) || Boolean(p.selectedPart && !relatedPart && !selected);
+  const opacity=!filtered?.045:dim?.085:selected?1:sharesTerminal?.94:.85;
   useFrame(({clock})=>{
     if(!bead.current)return;
     const t=((clock.getElapsedTime()*.29+index*.09)%1);
     bead.current.position.copy(curve.getPoint(t));
   });
-  if(!p.visible)return null;
+  if(!p.visible || (p.projection && !filtered))return null;
   return <group>
     <mesh geometry={geom} onClick={e=>{e.stopPropagation();p.onSelectWire(w.id);}}
       onPointerOver={()=>{document.body.style.cursor='pointer';}} onPointerOut={()=>{document.body.style.cursor='auto';}}>
       <meshStandardMaterial color={w.color} roughness={.34} metalness={.12} transparent opacity={opacity}
-        emissive={w.color} emissiveIntensity={selected?.68:filtered?.14:0}/>
+        emissive={w.color} emissiveIntensity={selected?1.5:sharesTerminal?.75:filtered?.24:0}/>
     </mesh>
     <mesh geometry={hoverGeom} onClick={e=>{e.stopPropagation();p.onSelectWire(w.id);}}>
       <meshBasicMaterial color="#fff" transparent opacity={0} depthWrite={false}/>
     </mesh>
+    {selected && p.projection && <>
+      <mesh position={start}><sphereGeometry args={[.135,16,16]}/><meshBasicMaterial color="#fff2a3"/></mesh>
+      <mesh position={end}><sphereGeometry args={[.135,16,16]}/><meshBasicMaterial color="#fff2a3"/></mesh>
+    </>}
     {(p.flow||selected) && filtered && <mesh ref={bead}>
-      <sphereGeometry args={[selected?.10:.075,10,10]}/>
+      <sphereGeometry args={[selected?.13:p.projection?.095:.075,10,10]}/>
       <meshBasicMaterial color={selected?'#ffffff':w.color}/>
     </mesh>}
   </group>;
