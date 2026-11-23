@@ -275,3 +275,83 @@ export function validateCircuit(): string[] {
   if (new Set(ids).size !== ids.length) errors.push('Trùng mã dây nối');
   return errors;
 }
+
+
+/** Source-of-truth coordinates for the industrial flat-lay wiring board (SVG viewBox units). */
+export type FlatPoint = readonly [number, number];
+export type FlatBox = Readonly<{ x:number; y:number; width:number; height:number }>;
+export type FlatPad = Readonly<{ x:number; y:number; side:'left'|'right' }>;
+export const FLAT_SIZE = {width:2300,height:1440} as const;
+export const FLAT_BOUNDS: Partial<Record<ComponentId,FlatBox>> = {
+  esp32:{x:930,y:260,width:345,height:840},
+  battery:{x:95,y:225,width:280,height:195},
+  charger:{x:95,y:540,width:300,height:205},
+  switch:{x:135,y:885,width:285,height:125},
+  boost:{x:490,y:1130,width:310,height:220},
+  tft:{x:1480,y:135,width:352,height:345},
+  button:{x:1935,y:170,width:240,height:188},
+  mic:{x:1445,y:645,width:330,height:270},
+  amp:{x:1845,y:655,width:340,height:286},
+  speaker:{x:1960,y:1065,width:225,height:225},
+};
+export const FLAT_PINS: Partial<Record<ComponentId,Record<PinId,FlatPad>>> = {
+  esp32:{"3V3":{x:939,y:310,side:"left"},"EN":{x:939,y:348,side:"left"},"GPIO4":{x:939,y:386,side:"left"},"GPIO5":{x:939,y:424,side:"left"},"GPIO6":{x:939,y:462,side:"left"},"GPIO7":{x:939,y:500,side:"left"},"GPIO15":{x:939,y:538,side:"left"},"GPIO16":{x:939,y:576,side:"left"},"GPIO17":{x:939,y:614,side:"left"},"GPIO18":{x:939,y:652,side:"left"},"GPIO8":{x:939,y:690,side:"left"},"GPIO3":{x:939,y:728,side:"left"},"GPIO46":{x:939,y:766,side:"left"},"GPIO9":{x:939,y:804,side:"left"},"GPIO10":{x:939,y:842,side:"left"},"GPIO11":{x:939,y:880,side:"left"},"GPIO12":{x:939,y:918,side:"left"},"GPIO13":{x:939,y:956,side:"left"},"GPIO14":{x:939,y:994,side:"left"},"5V":{x:939,y:1032,side:"left"},"GPIO43":{x:1266,y:310,side:"right"},"GPIO44":{x:1266,y:348,side:"right"},"GPIO1":{x:1266,y:386,side:"right"},"GPIO2":{x:1266,y:424,side:"right"},"GPIO42":{x:1266,y:462,side:"right"},"GPIO41":{x:1266,y:500,side:"right"},"GPIO40":{x:1266,y:538,side:"right"},"GPIO39":{x:1266,y:576,side:"right"},"GPIO38":{x:1266,y:614,side:"right"},"GPIO37":{x:1266,y:652,side:"right"},"GPIO36":{x:1266,y:690,side:"right"},"GPIO35":{x:1266,y:728,side:"right"},"GPIO0":{x:1266,y:766,side:"right"},"GPIO45":{x:1266,y:804,side:"right"},"GPIO48":{x:1266,y:842,side:"right"},"GPIO47":{x:1266,y:880,side:"right"},"GPIO21":{x:1266,y:918,side:"right"},"GPIO20":{x:1266,y:956,side:"right"},"GPIO19":{x:1266,y:994,side:"right"},"GND":{x:1266,y:1032,side:"right"}},
+  battery:{"+":{x:365,y:294,side:"right"},"-":{x:365,y:354,side:"right"}},
+  charger:{"B+":{x:105,y:593,side:"left"},"B-":{x:105,y:672,side:"left"},"OUT+":{x:386,y:593,side:"right"},"OUT-":{x:386,y:672,side:"right"}},
+  switch:{"COM":{x:145,y:932,side:"left"},"ON":{x:410,y:932,side:"right"}},
+  boost:{"IN+":{x:500,y:1194,side:"left"},"IN-":{x:500,y:1272,side:"left"},"OUT+":{x:792,y:1194,side:"right"},"OUT-":{x:792,y:1272,side:"right"}},
+  tft:{"GND":{x:1490,y:181,side:"left"},"VCC":{x:1490,y:218,side:"left"},"SCL":{x:1490,y:255,side:"left"},"SDA":{x:1490,y:292,side:"left"},"RES":{x:1490,y:329,side:"left"},"DC":{x:1490,y:366,side:"left"},"CS":{x:1490,y:403,side:"left"},"BLK":{x:1490,y:440,side:"left"}},
+  button:{"1":{x:1945,y:240,side:"left"},"2":{x:2165,y:301,side:"right"}},
+  mic:{"VDD":{x:1455,y:698,side:"left"},"GND":{x:1455,y:736,side:"left"},"SCK":{x:1455,y:774,side:"left"},"WS":{x:1455,y:812,side:"left"},"SD":{x:1455,y:850,side:"left"},"L/R":{x:1455,y:888,side:"left"}},
+  amp:{"VIN":{x:1855,y:700,side:"left"},"GND":{x:1855,y:735,side:"left"},"BCLK":{x:1855,y:770,side:"left"},"LRC":{x:1855,y:805,side:"left"},"DIN":{x:1855,y:840,side:"left"},"GAIN":{x:1855,y:875,side:"left"},"SD":{x:1855,y:910,side:"left"},"SPK+":{x:2175,y:752,side:"right"},"SPK-":{x:2175,y:822,side:"right"}},
+  speaker:{"+":{x:1970,y:1135,side:"left"},"-":{x:1970,y:1215,side:"left"}},
+};
+/** Pre-routed 90-degree routes with avoidance of component bodies. Regenerate when pad coordinates change. */
+export const FLAT_ROUTES: Record<string,readonly FlatPoint[]> = {
+  'P01':[[365,294],[410,294],[410,510],[60,510],[60,593],[105,593]],
+  'P02':[[365,354],[410,354],[410,350],[400,350],[400,440],[40,440],[40,670],[60,670],[60,672],[105,672]],
+  'P03':[[386,593],[430,593],[430,850],[100,850],[100,932],[145,932]],
+  'P04':[[410,932],[460,932],[460,1190],[450,1190],[450,1194],[500,1194]],
+  'P05':[[386,672],[430,672],[430,670],[450,670],[450,920],[440,920],[440,1270],[450,1270],[450,1272],[500,1272]],
+  'P06':[[792,1194],[840,1194],[840,1030],[890,1030],[890,1032],[939,1032]],
+  'P07':[[792,1194],[840,1194],[840,1190],[1810,1190],[1810,700],[1855,700]],
+  'P08':[[792,1272],[840,1272],[840,1270],[1310,1270],[1310,1032],[1266,1032]],
+  'P09':[[792,1272],[840,1272],[840,1290],[1780,1290],[1780,940],[1800,940],[1800,740],[1810,740],[1810,735],[1855,735]],
+  'P10':[[939,310],[890,310],[890,220],[1440,220],[1440,218],[1490,218]],
+  'P11':[[1266,1032],[1310,1032],[1310,240],[1450,240],[1450,180],[1440,180],[1440,181],[1490,181]],
+  'P12':[[939,310],[900,310],[900,230],[1310,230],[1310,250],[1330,250],[1330,700],[1410,700],[1410,698],[1455,698]],
+  'P13':[[1266,1032],[1310,1032],[1310,1030],[1410,1030],[1410,736],[1455,736]],
+  'P14':[[1266,1032],[1310,1032],[1310,1030],[1320,1030],[1320,1010],[1350,1010],[1350,890],[1410,890],[1410,888],[1455,888]],
+  'P15':[[939,310],[870,310],[870,200],[1440,200],[1440,440],[1490,440]],
+  'T01':[[1266,462],[1310,462],[1310,460],[1420,460],[1420,260],[1440,260],[1440,255],[1490,255]],
+  'T02':[[939,994],[890,994],[890,990],[900,990],[900,1120],[1300,1120],[1300,990],[1330,990],[1330,720],[1410,720],[1410,480],[1450,480],[1450,290],[1440,290],[1440,292],[1490,292]],
+  'T03':[[1266,386],[1310,386],[1310,390],[1400,390],[1400,330],[1440,330],[1440,329],[1490,329]],
+  'T04':[[1266,424],[1310,424],[1310,420],[1410,420],[1410,370],[1440,370],[1440,366],[1490,366]],
+  'T05':[[1266,918],[1310,918],[1310,920],[1320,920],[1320,680],[1390,680],[1390,470],[1430,470],[1430,400],[1440,400],[1440,403],[1490,403]],
+  'M01':[[1266,576],[1310,576],[1310,580],[1320,580],[1320,710],[1330,710],[1330,730],[1350,730],[1350,770],[1410,770],[1410,774],[1455,774]],
+  'M02':[[1266,538],[1310,538],[1310,540],[1300,540],[1300,810],[1410,810],[1410,812],[1455,812]],
+  'M03':[[1266,500],[1370,500],[1370,850],[1455,850]],
+  'A01':[[1266,576],[1310,576],[1310,580],[1800,580],[1800,740],[1810,740],[1810,770],[1855,770]],
+  'A02':[[1266,538],[1310,538],[1310,540],[1810,540],[1810,805],[1855,805]],
+  'A03':[[1266,880],[1350,880],[1350,900],[1370,900],[1370,940],[1810,940],[1810,840],[1855,840]],
+  'A04':[[2175,752],[2220,752],[2220,1030],[1920,1030],[1920,1135],[1970,1135]],
+  'A05':[[2175,822],[2220,822],[2220,820],[2210,820],[2210,960],[1900,960],[1900,1220],[1920,1220],[1920,1215],[1970,1215]],
+  'B01':[[1266,614],[1310,614],[1310,610],[1900,610],[1900,240],[1945,240]],
+  'B02':[[1266,1032],[1310,1032],[1310,1040],[1880,1040],[1880,980],[2240,980],[2240,300],[2210,300],[2210,301],[2165,301]],
+};
+/** Electrical/visual cross-checks for the 2D map. */
+export function validateFlatBoard():string[]{
+ const errors:string[]=[];
+ for(const wire of WIRES){
+  const from=FLAT_PINS[wire.from.component]?.[wire.from.pin];
+  const to=FLAT_PINS[wire.to.component]?.[wire.to.pin];
+  const route=FLAT_ROUTES[wire.id];
+  if(!from||!to||!route?.length){errors.push(`Thiếu tọa độ dây ${wire.id}`);continue;}
+  const first=route[0],last=route[route.length-1];
+  if(first[0]!==from.x||first[1]!==from.y||last[0]!==to.x||last[1]!==to.y){errors.push(`Dây ${wire.id} lệch tâm pad`);}
+  for(let i=0;i<route.length-1;i++){
+   if(route[i][0]!==route[i+1][0]&&route[i][1]!==route[i+1][1])errors.push(`${wire.id} có đoạn chéo`);
+  }
+ }
+ return errors;
+}

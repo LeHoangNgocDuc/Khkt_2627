@@ -1,0 +1,55 @@
+VISIONBOT V4.0 - CHE DO TRAI PHANG 2D / PHAN KHU 3
+================================================
+
+1. MO BANG DAI
+- Truy cap website, bam menu "03 - Dau noi".
+- Bang 2D SVG vector mo mac dinh, nen #111317 va luoi cham 20 px.
+- Bam "TRINH CHIEU TV" de mo full screen.
+- Bam "Xem mo hinh 3D" de chuyen sang ban 3D co san.
+
+2. TRINH BAY CHO BAN GIAM KHAO
+- Chon "TFT / SPI": xem GPIO42 -> SCL, GPIO14 -> SDA, GPIO1 -> RES,
+  GPIO2 -> DC, GPIO21 -> CS, cung nhanh 3V3/GND/BLK.
+- Chon "Nguon": xem pin Li-Po -> TP4056 -> cong tac -> Boost -> ESP32/Ampli.
+- Chon "Am thanh I2S": xem GPIO39/40 dung chung xung Micro + Ampli,
+  GPIO41 -> SD, GPIO47 -> DIN, SPK+/- -> hai cuc loa.
+- Chon "Nut bam": GPIO38 -> Nut chan 1, GND -> nut chan 2.
+- Bam vao tung so chan vang hoac duong day de phong to, hien cap dau noi.
+- Bam nut bieu tuong mat de an/hien bang thong tin phia ben phai.
+
+3. DIEU KHIEN
+- Cuon chuot de Zoom; keo chuot de Pan; dap hai lan reset.
+- Dien thoai: keo 1 ngon tay de Pan; chum 2 ngon tay de Zoom.
+- Phim R: vua khit man hinh; +/-: phong/thu; [ / ]: doi day.
+- Nut +, -, phong vua va mo/dong bang thong tin o goc phai man hinh.
+
+4. DONG HO VAN NANG AO
+- Do Pin Li-Po: hien 3.85V (gia lap).
+- Do Boost: hien 5.02V khi ON, 0.00V khi OFF.
+- Do 3V3: hien 3.30V khi ON, 0.00V khi OFF.
+- Bam "Cong tac mo phong" de doi trang thai.
+- Day LA SO LIEU MINH HOA, KHONG LAY TU THIET BI THAT.
+
+5. AN TOAN
+- Khong dua 5V vao chan 3V3 ESP32 / VDD INMP441.
+- Khong cap pin Li-Po 1S vao chan ESP32 5V khong qua Boost.
+- Khong noi SPK- hoac SPK+ xuong GND (ampli cau BTL).
+- Khong dung the nho microSD khi GPIO38/39/40 dang lam viec khac.
+- TP4056 thong thuong khong co quan ly duong nguon power-path;
+  can xac minh model, mach bao ve, dong sac va cach ly USB.
+
+6. TRANG THAI XAC THUC
+- Toan bo 30 ket noi va header GPIO la CAU HINH DE XUAT.
+- Da kiem tra duong day SVG dung tam pad, vuong goc va khong xuyen linh kien.
+- Van phai doi chieu mach GOOUUU thuc te, ST7789, TP4056 va firmware.
+- Theo tai lieu GOOUUU ESP32-S3-CAM, GPIO14 la chan dang co the dung cho
+  MOSI/TFT; camera dung GPIO4-13 va GPIO15-18. GPIO38-40 trung microSD.
+- Tranh cap nguon tu USB va Boost 5V dong thoi neu thieu bao ve nguon nguoc.
+
+7. CAP NHAT GITHUB/VERCEL
+- Giai nen ZIP, mo thu muc visionbot-3d.
+- Chep TOAN BO file/thumuc ben trong vao repo Khkt_2627 (ghi de cac file cu).
+- Commit changes tren nhanh main. Neu Vercel lien ket main, Vercel se build lai.
+- Root Directory: . (thu muc goc chua package.json).
+- Build command: npm run build; Output directory: dist; Framework: Vite.
+- Kiem tra tren PC/TV that sau khi build, nhat la zoom, toan man hinh, va 5V.

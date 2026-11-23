@@ -6,6 +6,7 @@ import { DemoPage } from './components/DemoPage';
 import { ResultsPage } from './components/ResultsPage';
 import { PitchBoardTV } from './components/PitchBoardTV';
 import { SchoolIdentity } from './components/SchoolIdentity';
+import { FlatLayBoard } from './components/FlatLayBoard';
 import { PROJECT_NAME, SCHOOL_NAME, CAMPUS_NAME } from './data/identity';
 
 type Zone='intro'|'model'|'wiring'|'principle'|'demo'|'results'|'presentation';
@@ -25,6 +26,7 @@ export default function App(){
   const [dark,setDark]=useState(true);
   const [demoStatus,setDemoStatus]=useState('Sẵn sàng hỗ trợ');
   const [expandedNav,setExpandedNav]=useState(false);
+  const [wiringView,setWiringView]=useState<'flat'|'3d'>('flat');
   function navigate(id:Zone){setSection(id);setExpandedNav(false);window.scrollTo({top:0,behavior:'instant'});}
   const index=NAV.findIndex(n=>n.id===section);
   return <div className={`app-root vision-portal ${dark?'theme-dark':'theme-light'}`}>
@@ -41,7 +43,8 @@ export default function App(){
     <div className="portal-current"><span><b>PHÂN KHU {index+1}/7</b> — {NAV[index].name}</span><span>{SCHOOL_NAME} • {CAMPUS_NAME}</span></div>
     <main className="portal-content">
       {section==='intro'&&<IntroPage onExplore={()=>navigate('model')} onDemo={()=>navigate('demo')} onPresent={()=>navigate('presentation')}/>}
-      {(section==='model'||section==='wiring'||section==='principle')&&<div className="embedded-workbench"><Workbench key={section} initialDark={dark} initialTab={section==='model'?'structure':section==='wiring'?'wiring':'principle'} onOpenTV={()=>navigate('presentation')}/></div>}
+      {(section==='model'||section==='principle')&&<div className="embedded-workbench"><Workbench key={section} initialDark={dark} initialTab={section==='model'?'structure':'principle'} onOpenTV={()=>navigate('presentation')}/></div>}
+      {section==='wiring'&&<div className="flat-section">{wiringView==='flat'?<FlatLayBoard onOpen3D={()=>setWiringView('3d')}/>:<><div className="flat-back-3d"><button onClick={()=>setWiringView('flat')}>← Trở lại bảng trải phẳng 2D siêu nét</button></div><div className="embedded-workbench"><Workbench key="wiring-3d" initialDark={dark} initialTab="wiring" onOpenTV={()=>navigate('presentation')}/></div></>}</div>}
       {section==='demo'&&<><DemoPage dark={dark} onStatus={setDemoStatus}/><div className="portal-demo-status"><Volume2 size={16}/> Trạng thái phản hồi trong mô hình: {demoStatus}</div></>}
       {section==='results'&&<ResultsPage/>}
       {section==='presentation'&&<PitchBoardTV dark={dark} onExit={()=>navigate('model')}/>}

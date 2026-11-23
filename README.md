@@ -242,3 +242,23 @@ npm run build
 ```
 
 Chỉ triển khai phiên bản mới khi các lệnh trên không báo lỗi. Nếu Vercel tự redeploy khi push lên nhánh `main`, kiểm tra log `Build` và thử mở website ở chế độ TV trên trình duyệt thật trước buổi thi.
+
+---
+
+## V4.0 — PHÂN KHU 3: TRẢI PHẲNG 2D SIÊU NÉT
+
+Website đã được bổ sung **bảng đấu nối SVG tương tác** ngay tại Phân khu 3. Đây là chế độ chính khi thuyết trình chân GPIO trên TV; mô hình 3D cũ vẫn có thể mở lại bằng nút “Xem mô hình 3D”.
+
+**Điều hướng:** Trang chủ → `03. Đấu nối` → chọn `TFT / SPI`, `Nguồn`, `Âm thanh I2S`, `Nút bấm` hoặc `Tất cả`. Khi chọn chân hoặc dây, hệ thống zoom gần và nêu rõ **thiết bị – chân xuất phát – thiết bị – chân đích**; các nhánh chung GPIO39/40, 3V3, GND và Boost được soi sáng theo nút đầu nối.
+
+**SVG công nghiệp:** nền `#111317` và chấm lưới 20px, 40 header của GOOUUU, pad có tâm tọa độ chính xác trong `src/data/circuitData.ts`, 30 đường nối đi theo đoạn ngang/dọc 90°, góc bo 8–9px. Các đường đã được tạo với thuật toán đi dây tránh linh kiện và được kiểm tra không đâm xuyên thân bo. Có zoom/pan bằng chuột, chụm hai ngón tay, nút vừa khít và toàn màn hình.
+
+**Đồng hồ ảo:** chọn 3 phép đo demo (pin 3,85V; Boost 5,02V; 3V3 3,30V) và bật/tắt công tắc; đây **không phải giá trị đo trực tiếp**. Khi OFF, 5V và 3,3V về 0,00V trong mô phỏng. Cảnh báo sạc TP4056, microSD, ngõ ra loa BTL và cấp sai nguồn được đặt riêng trong bảng thông tin.
+
+**Nơi chỉnh kỹ thuật:** `src/data/circuitData.ts` là nguồn duy nhất của sơ đồ chân, đường nối, tọa độ SVG, 2D route, dữ liệu mô hình 3D. Gọi `npm run check:connections` khi cập nhật tọa độ / chân. Hiện các tuyến 2D được dựng sẵn (precomputed) từ hệ tọa độ này để hoạt động mượt trên TV, sửa pad cần tính lại tuyến tương ứng.
+
+**Các file chính thay đổi:** `src/components/FlatLayBoard.tsx`, `src/data/circuitData.ts`, `src/flatlay.css`, `src/App.tsx`, `src/main.tsx`, `scripts/check-circuit.mjs`. Hướng dẫn nhanh có trong `HUONG_DAN_PHAN_KHU_3_FLATLAY_V4.txt`.
+
+**Lưu ý đối chiếu linh kiện:** Nguồn pinout tham khảo GOOUUU cho biết GPIO14 là chân độc lập có thể dùng MOSI; camera OV2640/OV5640 dùng GPIO4–13 và GPIO15–18 qua FPC. Không dùng khe microSD với GPIO38/39/40 trong cấu hình đề xuất. Mạch TP4056+Boost và firmware đang nạp phải được xác minh trước khi đấu nối thực. Tránh cấp nguồn USB/Boost đồng thời nếu không có bảo vệ cấp nguồn ngược.
+
+**Giới hạn kiểm thử:** kiểm tra được cú pháp TSX, mapping 30 dây và kiểm tra cắt linh kiện; chưa thể chạy `npm run build` thật trong môi trường phát triển do DNS không truy cập được npm registry. Cần kiểm tra bản build trên máy có Internet hoặc trong Vercel Build Logs.
