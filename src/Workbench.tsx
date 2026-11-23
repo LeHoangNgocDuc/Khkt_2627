@@ -56,7 +56,7 @@ function WiringBadge({group}:{group:WireGroup}){
   return <span className="wire-badge" style={{'--wire-color':WIRE_GROUPS[group].color} as CSSProperties}>{WIRE_GROUPS[group].label}</span>;
 }
 
-export default function Workbench({initialTab='structure',initialDark=true,onOpenTV}:{initialTab?:'structure'|'wiring'|'steps'|'principle'|'firmware';initialDark?:boolean;onOpenTV?:()=>void}){
+export default function Workbench({initialTab='structure',initialDark=true,onOpenTV,sidebarCollapsed=false,onToggleSidebar}:{initialTab?:'structure'|'wiring'|'steps'|'principle'|'firmware';initialDark?:boolean;onOpenTV?:()=>void;sidebarCollapsed?:boolean;onToggleSidebar?:()=>void}){
   const [tab,setTab]=useState<Tab>(initialTab);
   const [explode,setExplode]=useState(43);
   const [xray,setXray]=useState(false);
@@ -92,6 +92,7 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
 
   const selectPart=useCallback((id:ComponentId)=>{
     setSelectedPart(id);setSelectedWire(null);setSelectedPin(null);
+    if(window.innerWidth<=850)setMobilePanel(true);
     setFocusSerial(n=>n+1);
   },[]);
   const selectWire=useCallback((id:string)=>{
@@ -143,12 +144,12 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
       if(t?.matches('input,textarea,select,[contenteditable=true]'))return;
       if(e.key>='1'&&e.key<='7'){activatePreset(PRESETS[Number(e.key)-1].id);e.preventDefault();}
       else if(e.key.toLowerCase()==='r'){activatePreset('overview');e.preventDefault();}
-      else if(e.key.toLowerCase()==='p'){setPresent(v=>!v);e.preventDefault();}
+      else if(e.key.toLowerCase()==='p'){if(!onToggleSidebar){setPresent(v=>!v);e.preventDefault();}}
       else if(e.key===' '){setExplode(v=>v>45?0:100);e.preventDefault();}
       else if(e.key==='Escape'){setPresent(false);setMenuOpen(false);clearSelection();}
     }
     window.addEventListener('keydown',key);return ()=>window.removeEventListener('keydown',key);
-  },[activatePreset,clearSelection]);
+  },[activatePreset,clearSelection,onToggleSidebar]);
   const pitch=useMemo(()=>{
     if(focusWire)return `${focusWire.label}. ${focusWire.explanation}`;
     if(component)return component.pitch;
@@ -161,7 +162,7 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
   const selectedHeader=selectedPin?.id==='esp32'?getPinHeaderNo(selectedPin.pin):undefined;
   const totalCheck=currentStep.checks.filter((_,i)=>checked[`${step}-${i}`]).length;
 
-  return <div className={`app-root ${dark?'theme-dark':'theme-light'} ${present?'present-mode':''}`}>
+  return <div className={`app-root ${dark?'theme-dark':'theme-light'} ${present?'present-mode':''} ${sidebarCollapsed?'workbench-sidebar-collapsed':''}`}>
     <header className="main-header">
       <div className="brand-mark"><span className="brand-icon"><Cpu size={24}/><span className="eye-dot"/></span>
         <div className="brand-text"><strong>VISION<span>BOT</span><em> 3D</em></strong><small>PHÒNG THÍ NGHIỆM KHKT • STEM</small></div>
@@ -189,6 +190,8 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
             autoRotate={autoRotate} preset={preset} focusSerial={focusSerial} status={heroStatus} dark={dark}
             onSelectPart={selectPart} onSelectWire={selectWire} onPinSelect={selectPin} onBackground={clearSelection}/>:
             <Circuit2D onPart={selectPart} onWire={selectWire} groups={activeGroups}/>}
+        </div>
+        <div className="scene-toolbar-docked">
           <div className="stage-topbar">
             <div className="stage-breadcrumb"><Box size={14}/> VISIONBOT / {tab==='wiring'?'ĐẤU NỐI':tab==='steps'?'QUY TRÌNH':tab==='firmware'?'FIRMWARE':tab==='principle'?'NGUYÊN LÝ':'CẤU TRÚC'}</div>
             <div className="stage-top-actions">
@@ -201,13 +204,9 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
           <div className="quick-presets" aria-label="Góc nhìn nhanh">
             {PRESETS.map(v=><button key={v.id} className={preset===v.id?'active':''} title={`Phím ${v.no}`} onClick={()=>activatePreset(v.id)}><b>{v.no}</b>{v.label}</button>)}
           </div>
-          <div className="stage-info-card"><span className="info-orb"><Sparkles size={17}/></span><div>
-            <strong>{focusWire?'Đường dây được chọn':component?component.title:tab==='steps'?`BƯỚC ${step+1} / 7`:'GỢI Ý THUYẾT TRÌNH'}</strong>
-            <p>{pitch}</p>
-          </div>{(component||focusWire)&&<button className="close-mini" aria-label="Bỏ chọn" onClick={clearSelection}><X size={17}/></button>}</div>
           <div className="stage-hint"><MousePointer2 size={13}/> Kéo để xoay <span>•</span> Cuộn để zoom <span>•</span> Chọn linh kiện/dây để xem chi tiết</div>
         </div>
-        <div className="viewer-controls">
+        <div className="viewer-controls"><button className="sidebar-dock-toggle" onClick={()=>onToggleSidebar?.()} title="Thu gọn/mở bảng thông tin">{sidebarCollapsed?'Mở bảng thông tin':'Thu gọn bảng thông tin'}</button>
           <div className="explode-control"><Layers3 size={18}/><label htmlFor="explode"><b>Tách lớp</b><small>{explode}%</small></label>
             <input id="explode" type="range" min="0" max="100" step="1" value={explode}
               onChange={e=>setExplode(Number(e.target.value))} style={{'--value':`${explode}%`} as CSSProperties}/>
@@ -223,9 +222,14 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
         </div>
         <div className="bottom-notice"><AlertCircle size={16}/><span>Mô phỏng 3D minh họa kỹ thuật – Cấu hình GPIO đề xuất, cần đối chiếu kích thước linh kiện và firmware thực tế.</span></div>
       </section>
-      <aside className={`side-panel ${mobilePanel?'mobile-open':''}`}>
+      <aside className={`side-panel ${sidebarCollapsed?'sidebar-hidden':''} ${mobilePanel?'mobile-open':''}`}>
         <div className="side-handle" onClick={()=>setMobilePanel(v=>!v)}><span/><b>{TABS.find(t=>t.id===tab)?.title}</b><ChevronDown size={15}/></div>
         <div className="side-scroll">
+          <div className="stage-info-card"><span className="info-orb"><Sparkles size={17}/></span><div>
+            <strong>{focusWire?'Đường dây được chọn':component?component.title:tab==='steps'?`BƯỚC ${step+1} / 7`:'GỢI Ý THUYẾT TRÌNH'}</strong>
+            <p>{pitch}</p>
+          </div>{(component||focusWire)&&<button className="close-mini" aria-label="Bỏ chọn" onClick={clearSelection}><X size={17}/></button>}</div>
+
           {tab==='structure'&&<>
             <span className="section-eyebrow">KHÁM PHÁ BÊN TRONG</span><h2 className="side-title">Cấu tạo VisionBot</h2>
             <p className="side-description">Chọn một bộ phận để tự động xoay và phóng to mô hình, đồng thời nghe gợi ý thuyết trình.</p>
@@ -295,6 +299,7 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
         </div>
       </aside>
     </main>
+    {sidebarCollapsed&&<div className="workbench-inline-status"><Cable size={16}/><strong>{focusWire?`${focusWire.from.component} / ${focusWire.from.pin} → ${focusWire.to.component} / ${focusWire.to.pin}`:component?.title||'Chọn linh kiện hoặc dây để xem thông tin'}</strong><span>{focusWire?.warning||pitch}</span><button onClick={()=>onToggleSidebar?.()}>Xem chi tiết</button></div>}
     <footer className="main-footer"><span><Accessibility size={14}/> VISIONBOT STEM LAB • KHKT</span><span>Đấu nối theo cấu hình đề xuất • Không thay thế kiểm tra điện thực tế</span><button onClick={()=>setShowWarnings(true)}><ShieldAlert size={14}/> An toàn nguồn & GPIO</button></footer>
     {showWarnings&&<div className="modal-backdrop" onMouseDown={()=>setShowWarnings(false)}>
       <div role="dialog" aria-modal="true" aria-label="Cảnh báo an toàn khi đấu nối" className="warning-modal" onMouseDown={e=>e.stopPropagation()}>

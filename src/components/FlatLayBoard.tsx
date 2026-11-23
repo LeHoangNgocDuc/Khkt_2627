@@ -182,15 +182,15 @@ function FlatComponent({id,onPart,onPin,activePins,switchedOn}:{id:ComponentId;o
  </g>;
 }
 
-interface Props {onOpen3D:()=>void}
-export function FlatLayBoard({onOpen3D}:Props){
+interface Props {onOpen3D:()=>void;sidebarCollapsed?:boolean;onToggleSidebar?:()=>void}
+export function FlatLayBoard({onOpen3D,sidebarCollapsed=false,onToggleSidebar}:Props){
  const host=useRef<HTMLDivElement|null>(null);
  const [filter,setFilter]=useState<Filter>('tft');const [view,setView]=useState<ViewBox>(FIT);
  const [activeId,setActiveId]=useState<string|null>('T01');const [hoverId,setHoverId]=useState<string|null>(null);
  const [focusPin,setFocusPin]=useState<string|null>(null);
  const [meter,setMeter]=useState<Meter>('boost');const [power,setPower]=useState(true);
- const [showSafety,setShowSafety]=useState(false);const [showInspector,setShowInspector]=useState(true);
- const [tip,setTip]=useState<{x:number;y:number}|null>(null);const [fullscreen,setFullscreen]=useState(false);
+ const [showSafety,setShowSafety]=useState(false);const [mobileDetailsOpen,setMobileDetailsOpen]=useState(false);
+ const [fullscreen,setFullscreen]=useState(false);
  const pointerState=useRef<Map<number,Pos>>(new Map());const dragStart=useRef<{point:Pos;view:ViewBox;scale:number}|null>(null);
  const pinchStart=useRef<{distance:number;view:ViewBox;anchor:Pos}|null>(null);
  const visible=useMemo(()=>WIRES.filter(w=>filterWire(w,filter)),[filter]);
@@ -213,11 +213,12 @@ export function FlatLayBoard({onOpen3D}:Props){
  const selectedNetNames=focused?[...shared].join(', '):'';
  const focusedWarning=focusWire?.warning??(focused?.startsWith('P')?'Kiểm tra điện áp trước khi nối thiết bị thật.':undefined);
  const screenGuard=()=>{
-  if(document.fullscreenElement===host.current){void document.exitFullscreen().catch(()=>{});}
-  else{void host.current?.requestFullscreen().catch(()=>{});}
+  const target=(host.current?.closest('.vision-v5') as HTMLElement|null)??host.current;
+  if(document.fullscreenElement){void document.exitFullscreen().catch(()=>{});}
+  else{void target?.requestFullscreen().catch(()=>{});}
  };
  useEffect(()=>{
-  const cb=()=>setFullscreen(document.fullscreenElement===host.current);
+  const cb=()=>setFullscreen(Boolean(document.fullscreenElement));
   document.addEventListener('fullscreenchange',cb);return()=>document.removeEventListener('fullscreenchange',cb);
  },[]);
  const zoom=useCallback((factor:number,at:Pos={x:FIT.width/2,y:FIT.height/2})=>{
@@ -237,11 +238,11 @@ export function FlatLayBoard({onOpen3D}:Props){
  },[]);
  const selectWire=useCallback((id:string)=>{
   const w=WIRES.find(item=>item.id===id);if(!w)return;
-  setActiveId(id);setFocusPin(null);setTip(null);
+  setActiveId(id);setFocusPin(null);setMobileDetailsOpen(true);
   centerTo(FLAT_ROUTES[id],filter==='all'?1050:900);
  },[centerTo,filter]);
  const selectPin=useCallback((component:ComponentId,pin:string)=>{
-  setFocusPin(pinKey(component,pin));
+  setFocusPin(pinKey(component,pin));setMobileDetailsOpen(true);
   const associated=WIRES.find(w=>isSameTerminal(w.from,{component,pin})||isSameTerminal(w.to,{component,pin}));
   if(associated){setActiveId(associated.id);setFilter(current=>filterWire(associated,current)?current:associated.group==='nguon'?'source':associated.group==='man-hinh'?'tft':associated.group==='nut-bam'?'button':'audio');}
   else setActiveId(null);
@@ -293,10 +294,16 @@ export function FlatLayBoard({onOpen3D}:Props){
    if(e.key==='+'||e.key==='='){zoom(1.2);e.preventDefault();}
    if(e.key==='-'){zoom(1/1.2);e.preventDefault();}
    if(e.key===']'||e.key==='['){const current=visible.findIndex(w=>w.id===activeId);const next=e.key===']'?current+1:current-1;const nw=visible[(next+visible.length)%visible.length];if(nw)selectWire(nw.id);e.preventDefault();}
-   if(e.key==='Escape'){setHoverId(null);setTip(null);}
+   if(e.key==='Escape'){setHoverId(null);}
   };
   window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);
  },[zoom,activeId,selectWire,visible]);
+ useEffect(()=>{
+  const stage=host.current?.querySelector<HTMLElement>('.flat-board-stage');
+  if(!stage||typeof ResizeObserver==='undefined')return;
+  const observer=new ResizeObserver(()=>setView(v=>v.width===FIT.width?{...FIT}:v));
+  observer.observe(stage);return()=>observer.disconnect();
+ },[]);
  const copyConnection=()=>{
   if(!chosen)return;
   void navigator.clipboard?.writeText(`${chosen.id}: ${PARTS[chosen.from.component].title} (${chosen.from.pin}) -> ${PARTS[chosen.to.component].title} (${chosen.to.pin}). ${chosen.explanation}`).catch(()=>{});
@@ -310,20 +317,23 @@ export function FlatLayBoard({onOpen3D}:Props){
   <div className="flat-filterbar">
    <span className="flat-filter-label"><SlidersHorizontal size={16}/> NHÓM DÂY:</span>
    {BUTTONS.map(b=><button key={b.id} className={`flat-filter-chip ${filter===b.id?'active':''}`} style={{'--fcolor':b.color} as CSSProperties} onClick={()=>{
-    setFilter(b.id);setHoverId(null);setTip(null);
+    setFilter(b.id);setHoverId(null);
     const first=WIRES.find(w=>filterWire(w,b.id));setActiveId(first?.id??null);setFocusPin(null);setView(FIT);
    }}><i/>{b.title}<small>{b.sub}</small></button>)}
    <div className="flat-filter-count">{visible.length} / 30 dây</div>
   </div>
-  <div className={`flat-content ${!showInspector?'flat-no-inspector':''}`}>
-   <div className="flat-board-stage">
-    <div className="flat-stage-mark"><span className="flat-live-dot"/> SƠ ĐỒ KỸ THUẬT · CẤU HÌNH ĐỀ XUẤT <small>KHÔNG PHẢI PHÉP ĐO THỰC</small></div>
-    <div className="flat-canvas-tools">
-     <button title="Phóng to" onClick={()=>zoom(1.25)}><Plus size={22}/></button>
-     <button title="Thu nhỏ" onClick={()=>zoom(1/1.25)}><Minus size={22}/></button>
-     <button title="Zoom khít màn hình" onClick={()=>setView(FIT)}><Maximize2 size={21}/></button>
-     <button title="Bật/tắt bảng giải thích" onClick={()=>setShowInspector(v=>!v)}><Eye size={21}/></button>
+  <div className={`flat-content ${sidebarCollapsed?'flat-no-inspector':''}`}>
+   <div className="flat-visual-column">
+    <div className="flat-controls-docked">
+     <span className="flat-stage-mark"><span className="flat-live-dot"/> SƠ ĐỒ KỸ THUẬT · CẤU HÌNH ĐỀ XUẤT</span>
+     <div className="flat-canvas-tools">
+      <button title="Phóng to" onClick={()=>zoom(1.25)}><Plus size={20}/></button>
+      <button title="Thu nhỏ" onClick={()=>zoom(1/1.25)}><Minus size={20}/></button>
+      <button title="Zoom khít màn hình" onClick={()=>setView(FIT)}><Maximize2 size={20}/></button>
+      <button title="Thu gọn/mở bảng giải thích" onClick={()=>onToggleSidebar?.()}><Eye size={20}/></button>
+     </div>
     </div>
+   <div className="flat-board-stage">
     <svg className="flat-board-svg" xmlns="http://www.w3.org/2000/svg" viewBox={`${view.x} ${view.y} ${view.width} ${view.height}`} preserveAspectRatio="xMidYMid meet" aria-label="Bảng đấu nối phẳng VisionBot tương tác, có các chân, sợi dây và các linh kiện" role="img"
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onDoubleClick={()=>setView(FIT)}>
      <defs>
@@ -344,9 +354,9 @@ export function FlatLayBoard({onOpen3D}:Props){
        const active=shared.has(w.id),isHovered=w.id===focused;const d=ROUTE_PATHS[w.id];const color=colorFor(w);
        const inactive=Boolean(focused)&&!active;
        return <g key={w.id} className={active?'flat-path-active':''} style={{cursor:'pointer'}}
-         onMouseEnter={(e:ReactMouseEvent<SVGGElement>)=>{setHoverId(w.id);setTip({x:e.clientX,y:e.clientY});}}
-         onMouseMove={(e:ReactMouseEvent<SVGGElement>)=>{if(hoverId===w.id)setTip({x:e.clientX,y:e.clientY});}}
-         onMouseLeave={()=>{setHoverId(null);setTip(null);}}
+         onMouseEnter={()=>setHoverId(w.id)}
+         
+         onMouseLeave={()=>setHoverId(null)}
          onClick={(e:ReactMouseEvent<SVGGElement>)=>{e.stopPropagation();selectWire(w.id);}}>
           {active&&<path d={d} stroke={color} strokeWidth={17} opacity=".4" filter="url(#flat-glow)" fill="none" strokeLinejoin="round"/>}
           <path d={d} stroke="#050708" strokeWidth="11" opacity={inactive?.08:.88} fill="none" strokeLinejoin="round"/>
@@ -384,22 +394,12 @@ export function FlatLayBoard({onOpen3D}:Props){
      <SVGLabel x={58} y={1415} size={17} color="#8fa8b9">Chọn chân/dây để soi • Cuộn chuột Zoom • Kéo bảng Pan • Đúp chuột về toàn cảnh</SVGLabel>
      <SVGLabel x={2220} y={1415} size={17} color="#8fa8b9" anchor="end">SVG VECTOR · 2300 × 1440</SVGLabel>
     </svg>
-    <div className="flat-bottom-hints"><span><Move size={14}/> Kéo để di chuyển</span><span><Plus size={14}/> Lăn chuột / chụm tay để zoom</span><span><Cable size={14}/> Nhấp dây để soi tuyến</span><b>{zoomPct}%</b></div>
-    {tip&&focusWire&&<div className="flat-hover-tooltip" style={{left:clamp(tip.x-(host.current?.getBoundingClientRect().left??0),10,(host.current?.clientWidth??800)-360),top:clamp(tip.y-(host.current?.getBoundingClientRect().top??0)-75,92,600)}}>
-      <b style={{color:colorFor(focusWire)}}>{focusWire.id} · {focusWire.label}</b>
-      <small>{PARTS[focusWire.from.component].title} / {focusWire.from.pin} → {PARTS[focusWire.to.component].title} / {focusWire.to.pin}</small>
-    </div>}
-    <div className="flat-meter" aria-label="Đồng hồ vạn năng số ảo minh họa, không đo điện thực">
-     <div className="flat-meter-top"><Zap size={15}/> ĐỒNG HỒ ẢO <span>DEMO · KHÔNG ĐO THẬT</span></div>
-     <div className="flat-meter-lcd"><span>DC · V</span><b>{meterValue}</b><strong>V</strong><small>{meter==='battery'?'Li-Po / B+ B−':meter==='boost'?'BOOST OUT+ / OUT−':'ESP32 3V3 / GND'}</small></div>
-     <div className="flat-meter-probes"><span><i/> Que đo đỏ</span><span><i/> Que đo đen</span></div>
-     <div className="flat-meter-choice">{METER_CHOICES.map(m=><button key={m.id} onClick={()=>setMeter(m.id)} className={meter===m.id?'active':''}>{m.title}</button>)}</div>
-     <button className={`flat-power-toggle ${power?'on':''}`} onClick={()=>setPower(v=>!v)}>{power?<Check size={15}/>:<Unplug size={15}/>} Công tắc mô phỏng: {power?'ON':'OFF'}</button>
-     <small className="flat-meter-result">{meter==='boost'&&power?'Đầu ra mẫu đạt 5V trước khi nối ESP32.':meter==='battery'?'3,85V là giá trị giả lập của pin 1S.':meter==='three'&&power?'Nguồn mô phỏng 3,30V cho TFT và micro.':'Khi OFF, đường cấp nguồn sau công tắc về 0,00V.'}</small>
-    </div>
    </div>
-   {showInspector&&<aside className="flat-inspector">
-     <div className="flat-inspector-top"><div><span>SOI DÂY TRỰC TIẾP</span><strong>{chosen?`${chosen.id} — ${chosen.label}`:'Chọn một chân hoặc dây'}</strong></div><button onClick={()=>setShowInspector(false)} aria-label="Thu gọn bảng"><Eye size={17}/></button></div>
+   <div className="flat-bottom-hints flat-bottom-docked"><span><Move size={14}/> Kéo để di chuyển</span><span><Plus size={14}/> Lăn chuột hoặc chụm tay để zoom</span><b>{zoomPct}%</b></div>
+   </div>
+   <aside className={`flat-inspector ${sidebarCollapsed?'sidebar-hidden':''} ${mobileDetailsOpen?'mobile-open':''}`}>
+     <button className="flat-mobile-handle" onClick={()=>setMobileDetailsOpen(v=>!v)} aria-expanded={mobileDetailsOpen}>{mobileDetailsOpen?'Thu gọn thông tin ▲':'Xem chi tiết đường dây ▼'}</button>
+     <div className="flat-inspector-top"><div><span>SOI DÂY TRỰC TIẾP</span><strong>{chosen?`${chosen.id} — ${chosen.label}`:'Chọn một chân hoặc dây'}</strong></div><button onClick={()=>onToggleSidebar?.()} aria-label="Thu gọn bảng"><Eye size={17}/></button></div>
      {chosen?<div className="flat-route-card">
         <div className="flat-route-header"><span className="flat-wire-id" style={{borderColor:colorFor(chosen),color:colorFor(chosen)}}>{chosen.id}</span><span>ĐƯỜNG DÂY ĐÃ CHỌN</span><button onClick={copyConnection} title="Sao chép kết nối"><Copy size={16}/></button></div>
         <div className="flat-route-endpoints">
@@ -411,14 +411,23 @@ export function FlatLayBoard({onOpen3D}:Props){
         {selectedNetNames&&shared.size>1&&<div className="flat-junction"><Zap size={16}/> Cùng nút chia nhánh: <strong>{selectedNetNames}</strong></div>}
         {focusedWarning&&<div className="flat-single-warn"><AlertTriangle size={16}/>{focusedWarning}</div>}
        </div>:<div className="flat-route-card"><p>Nhấp một chân trên bo mạch hoặc một sợi dây trên bảng để xem cặp chân đấu nối chính xác.</p></div>}
+    <div className="flat-meter" aria-label="Đồng hồ vạn năng số ảo minh họa, không đo điện thực">
+     <div className="flat-meter-top"><Zap size={15}/> ĐỒNG HỒ ẢO <span>DEMO · KHÔNG ĐO THẬT</span></div>
+     <div className="flat-meter-lcd"><span>DC · V</span><b>{meterValue}</b><strong>V</strong><small>{meter==='battery'?'Li-Po / B+ B−':meter==='boost'?'BOOST OUT+ / OUT−':'ESP32 3V3 / GND'}</small></div>
+     <div className="flat-meter-probes"><span><i/> Que đo đỏ</span><span><i/> Que đo đen</span></div>
+     <div className="flat-meter-choice">{METER_CHOICES.map(m=><button key={m.id} onClick={()=>setMeter(m.id)} className={meter===m.id?'active':''}>{m.title}</button>)}</div>
+     <button className={`flat-power-toggle ${power?'on':''}`} onClick={()=>setPower(v=>!v)}>{power?<Check size={15}/>:<Unplug size={15}/>} Công tắc mô phỏng: {power?'ON':'OFF'}</button>
+     <small className="flat-meter-result">{meter==='boost'&&power?'Đầu ra mẫu đạt 5V trước khi nối ESP32.':meter==='battery'?'3,85V là giá trị giả lập của pin 1S.':meter==='three'&&power?'Nguồn mô phỏng 3,30V cho TFT và micro.':'Khi OFF, đường cấp nguồn sau công tắc về 0,00V.'}</small>
+    </div>
      <div className="flat-list-title"><strong>DANH SÁCH DÂY</strong><span>{visible.length} kết nối</span></div>
      <div className="flat-inspector-list">{visible.map(w=><button key={w.id} onClick={()=>selectWire(w.id)} className={chosen?.id===w.id?'active':''}>
       <span className="flat-wid" style={{background:colorFor(w)}}>{w.id}</span><span><b>{w.from.pin} <ArrowRight size={14}/> {w.to.pin}</b><small>{PARTS[w.from.component].title} → {PARTS[w.to.component].title}</small></span></button>)}</div>
      <button className="flat-safety-button" onClick={()=>setShowSafety(v=>!v)}><ShieldAlert size={18}/> 5 NGUYÊN TẮC AN TOÀN <span>{showSafety?'Ẩn':'Xem'}</span></button>
      {showSafety&&<div className="flat-warnings">{SAFETY_WARNINGS.map((item,i)=><div key={i}><b>{i+1}</b><span>{item}</span></div>)}</div>}
      <div className="flat-check-note"><AlertTriangle size={16}/> GPIO14 không phải chân camera trên GOOUUU tham chiếu; GPIO38–40 thuộc khe microSD, không dùng SD đồng thời. Đối chiếu firmware thực tế trước khi đấu điện.</div>
-    </aside>}
+    </aside>
   </div>
+  {sidebarCollapsed&&<div className="flat-collapsed-status"><Cable size={17}/><b>{chosen?`${chosen.from.pin} → ${chosen.to.pin}`:'BẢNG ĐẤU NỐI'}</b><span>{chosen?`${PARTS[chosen.from.component].title} đến ${PARTS[chosen.to.component].title} · ${chosen.explanation}`:'Nhấn vào dây hoặc chân để soi kết nối'}</span><button onClick={()=>onToggleSidebar?.()}>Mở bảng</button></div>}
   <div className="flat-footerbar"><span><ShieldAlert size={15}/> Bản vẽ mô phỏng theo cấu hình đề xuất, cần kiểm tra phần cứng, pinout và firmware thực tế.</span><span>Phím: <kbd>R</kbd> toàn cảnh · <kbd>+</kbd> / <kbd>−</kbd> zoom · <kbd>[</kbd> / <kbd>]</kbd> đổi dây</span></div>
  </div>;
 }

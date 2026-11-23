@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Activity, BarChart3, Box, Cable, ChevronDown, CircuitBoard, Clock3, GraduationCap, Moon, Presentation, Sun, Volume2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Activity, BarChart3, Box, Cable, ChevronDown, CircuitBoard, GraduationCap, Moon, Presentation, Sun, Volume2, PanelRightClose, PanelRightOpen, Maximize2 } from 'lucide-react';
 import Workbench from './Workbench';
 import { IntroPage } from './components/IntroPage';
 import { DemoPage } from './components/DemoPage';
@@ -27,15 +27,34 @@ export default function App(){
   const [demoStatus,setDemoStatus]=useState('Sẵn sàng hỗ trợ');
   const [expandedNav,setExpandedNav]=useState(false);
   const [wiringView,setWiringView]=useState<'flat'|'3d'>('flat');
+  const [sidebarCollapsed,setSidebarCollapsed]=useState(false);
+  const visualZone=section==='model'||section==='wiring'||section==='principle';
+  const toggleFullscreen=()=>{
+    if(document.fullscreenElement){void document.exitFullscreen().catch(()=>{});return;}
+    void document.documentElement.requestFullscreen?.().catch(()=>{});
+  };
+  useEffect(()=>{
+    const onKey=(event:KeyboardEvent)=>{
+      const target=event.target as HTMLElement|null;
+      if(target?.closest('input,textarea,select,[contenteditable="true"]'))return;
+      if(event.key.toLowerCase()==='p'&&section!=='presentation'){
+        event.preventDefault();toggleFullscreen();
+      }
+    };
+    window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);
+  },[section]);
   function navigate(id:Zone){setSection(id);setExpandedNav(false);window.scrollTo({top:0,behavior:'instant'});}
   const index=NAV.findIndex(n=>n.id===section);
-  return <div className={`app-root vision-portal ${dark?'theme-dark':'theme-light'}`}>
-    <header className="portal-header">
-      <div className="portal-header-identity"><SchoolIdentity compact editable/></div>
-      <div className="portal-header-project"><strong>VISION<span>BOT</span></strong><small>TRỢ LÝ THUYẾT TRÌNH KỸ THUẬT 3D</small></div>
-      <div className="portal-header-actions"><span className="portal-badge"><Clock3 size={13}/> KHKT • STEM</span>
-        <button title="Chuyển chế độ sáng/tối" onClick={()=>setDark(v=>!v)}>{dark?<Sun size={18}/>:<Moon size={18}/>}</button>
-        <button className="mobile-section-toggle" aria-label="Mở danh sách 7 phân khu" onClick={()=>setExpandedNav(v=>!v)}><ChevronDown size={18}/></button></div>
+  return <div className={`app-root vision-portal vision-v5 ${visualZone?'visual-zone-active':''} ${dark?'theme-dark':'theme-light'}`}> 
+    <header className="portal-header" aria-label="Nhận diện trường và dự án VisionBot">
+      <div className="portal-header-identity"><SchoolIdentity compact editable competition/></div>
+      <div className="portal-header-project"><strong>VISIONBOT – RÔ-BỐT AI HỖ TRỢ NGƯỜI KHIẾM THỊ</strong><small>3D &amp; Mạch tương tác · Cuộc thi Khoa học Kỹ thuật – STEM / AI</small></div>
+      <div className="portal-header-actions">
+        {visualZone&&<button aria-label={sidebarCollapsed?'Mở bảng thông tin':'Thu gọn bảng thông tin'} title={sidebarCollapsed?'Mở bảng thông tin':'Thu gọn bảng thông tin'} onClick={()=>setSidebarCollapsed(v=>!v)}>{sidebarCollapsed?<PanelRightOpen size={19}/>:<PanelRightClose size={19}/>}</button>}
+        <button title="Toàn màn hình BGK (P)" aria-label="Toàn màn hình BGK" onClick={toggleFullscreen}><Maximize2 size={19}/></button>
+        <button title={dark?'Chế độ sáng':'Chế độ tối'} aria-label="Đổi giao diện sáng tối" onClick={()=>setDark(v=>!v)}>{dark?<Sun size={19}/>:<Moon size={19}/>}</button>
+        <button className="mobile-section-toggle" aria-label="Mở danh sách 7 phân khu" onClick={()=>setExpandedNav(v=>!v)}><ChevronDown size={19}/></button>
+      </div>
     </header>
     <nav aria-label="7 phân khu VisionBot" className={`portal-nav ${expandedNav?'expanded':''}`}>
       {NAV.map((item,i)=>{const Icon=item.icon;return <button key={item.id} onClick={()=>navigate(item.id)} aria-current={item.id===section?'page':undefined} className={item.id===section?'active':''} title={item.name}><span className="portal-nav-no">{String(i+1).padStart(2,'0')}</span><Icon size={17}/><span>{item.short}</span></button>;})}
@@ -43,8 +62,8 @@ export default function App(){
     <div className="portal-current"><span><b>PHÂN KHU {index+1}/7</b> — {NAV[index].name}</span><span>{SCHOOL_NAME} • {CAMPUS_NAME}</span></div>
     <main className="portal-content">
       {section==='intro'&&<IntroPage onExplore={()=>navigate('model')} onDemo={()=>navigate('demo')} onPresent={()=>navigate('presentation')}/>}
-      {(section==='model'||section==='principle')&&<div className="embedded-workbench"><Workbench key={section} initialDark={dark} initialTab={section==='model'?'structure':'principle'} onOpenTV={()=>navigate('presentation')}/></div>}
-      {section==='wiring'&&<div className="flat-section">{wiringView==='flat'?<FlatLayBoard onOpen3D={()=>setWiringView('3d')}/>:<><div className="flat-back-3d"><button onClick={()=>setWiringView('flat')}>← Trở lại bảng trải phẳng 2D siêu nét</button></div><div className="embedded-workbench"><Workbench key="wiring-3d" initialDark={dark} initialTab="wiring" onOpenTV={()=>navigate('presentation')}/></div></>}</div>}
+      {(section==='model'||section==='principle')&&<div className="embedded-workbench"><Workbench key={section} initialDark={dark} initialTab={section==='model'?'structure':'principle'} onOpenTV={()=>navigate('presentation')} sidebarCollapsed={sidebarCollapsed} onToggleSidebar={()=>setSidebarCollapsed(v=>!v)}/></div>}
+      {section==='wiring'&&<div className="flat-section">{wiringView==='flat'?<FlatLayBoard onOpen3D={()=>setWiringView('3d')} sidebarCollapsed={sidebarCollapsed} onToggleSidebar={()=>setSidebarCollapsed(v=>!v)}/>:<><div className="flat-back-3d"><button onClick={()=>setWiringView('flat')}>← Trở lại bảng trải phẳng 2D siêu nét</button></div><div className="embedded-workbench"><Workbench key="wiring-3d" initialDark={dark} initialTab="wiring" onOpenTV={()=>navigate('presentation')} sidebarCollapsed={sidebarCollapsed} onToggleSidebar={()=>setSidebarCollapsed(v=>!v)}/></div></>}</div>}
       {section==='demo'&&<><DemoPage dark={dark} onStatus={setDemoStatus}/><div className="portal-demo-status"><Volume2 size={16}/> Trạng thái phản hồi trong mô hình: {demoStatus}</div></>}
       {section==='results'&&<ResultsPage/>}
       {section==='presentation'&&<PitchBoardTV dark={dark} onExit={()=>navigate('model')}/>}

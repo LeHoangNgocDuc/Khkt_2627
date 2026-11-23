@@ -1,3 +1,46 @@
+# CẬP NHẬT VISIONBOT V5.0 — TRÌNH CHIẾU KHÔNG CHE MẠCH
+
+**Đơn vị:** Trường THCS Nam Nha Trang — Phân hiệu Vĩnh Trường.  
+**Dự án:** VISIONBOT – RÔ-BỐT AI HỖ TRỢ NGƯỜI KHIẾM THỊ.  
+**Vai trò:** Công cụ mô phỏng phục vụ thuyết trình KHKT, không phải phần mềm đo mạch điện thực tế.
+
+## Những thay đổi so với V4
+
+- Header 64px có tên trường, phân hiệu, nhãn KHKT và đề tài; nút thu gọn/mở bảng, toàn màn hình (P), sáng/tối.
+- Thư mục nguồn của GitHub đang có `Logo.jpg` ở **gốc repository**: thành phần `SchoolIdentity` tự nhận diện tệp gốc bằng Vite `import.meta.glob('../../Logo.jpg')` khi build. **Giữ nguyên `Logo.jpg` trong repo**, không cần đổi tên. Ưu tiên tùy chọn khác: đặt logo tại `public/logo-truong.png`. Nút nạp logo tại trình duyệt ghi đè vào `localStorage` của đúng máy đó. Nếu logo nằm ở GitHub nhưng không có trong bộ mã được Vercel build, website sẽ dùng fallback, không tự tải logo từ GitHub qua mạng.
+- Phân khu 2/4 (3D): Nút góc nhìn, hướng dẫn và thẻ thông số **nằm ngoài vùng WebGL**; 3D nở theo khoảng trống thật.
+- Phân khu 3 (2D): Bộ lọc dây, zoom và đồng hồ vạn năng ảo đều được dock; bảng kỹ thuật bên phải cố định 360px, cuộn riêng. Không còn hộp đồng hồ hoặc tooltip nổi trên mạch.
+- Khi thu gọn Sidebar, bản mạch 2D/3D rộng hết màn hình; dải 44px phía dưới vẫn cho biết kết nối đang chọn.
+- Mobile: Sidebar trở thành dải kéo mở phía **dưới** vùng mô hình, không phủ lên bo mạch. Chọn chân/dây có thể mở vùng thông tin trong phần chiều cao riêng.
+- Chế độ BGK: các nút zoom và gợi ý thuyết trình đã được đưa ra ngoài canvas; phần nhắc lời hiển thị như sidebar dock, không phải cửa sổ đè lên mạch.
+
+## Chạy tại máy tính
+
+Yêu cầu Node.js 20.19+ hoặc 22.12+. Mở Terminal ở đúng thư mục chứa `package.json`, chạy:
+
+```bash
+npm install
+npm run check:connections
+npm run check:layout
+npm run dev
+```
+
+Trước khi triển khai, chạy `npm run build`. Tệp xuất ra ở thư mục `dist/`; với dự án Vercel sử dụng framework Vite, `Build Command = npm run build`, `Output Directory = dist`.
+
+## Cập nhật dự án GitHub `LeHoangNgocDuc/Khkt_2627`
+
+1. Sao lưu repository đang hoạt động.
+2. Giải nén ZIP, mở thư mục `visionbot-3d`, tải **nội dung bên trong** lên gốc nhánh `main` của repository, ghi đè các tệp trùng tên và giữ nguyên các tài nguyên khác chưa thay thế, nhất là **`Logo.jpg`**.
+3. Bắt buộc có `src/layout-v5.css`, `src/App.tsx`, `src/Workbench.tsx`, `src/components/FlatLayBoard.tsx`, `src/components/PitchBoardTV.tsx`, `src/components/SchoolIdentity.tsx`, `src/main.tsx` và `package.json` mới. Nếu thiếu `src/layout-v5.css`, bố cục không đổi.
+4. Commit, vào Vercel kiểm tra bản triển khai mới lấy đúng commit, không lỗi Build Logs. Nhấn `Ctrl + Shift + R` trên trình duyệt để tải lại giao diện nếu bị cache.
+5. Thử ở hai độ phân giải: **1920 × 1080 (TV)** và **1366 × 768 (laptop)**; trong phân khu 3, chọn dây và kiểm tra 2 đầu chân trong sidebar; thử nút thu gọn.
+
+## Trạng thái xác minh
+
+Kiểm tra parser TS/TSX và CSS (PostCSS) đã đạt, `check:connections` đạt 14 bộ phận / 40 header / 30 dây / 30 tuyến. **Môi trường tạo bản này không có quyền truy cập npm registry nên chưa thể xác minh đầy đủ `npm install`, `npm run build` hoặc chạy WebGL trên trình duyệt.** Đây không phải cam kết đã test hoàn chỉnh trên Vercel.
+
+---
+
 # VISIONBOT – TRỢ LÝ THUYẾT TRÌNH KỸ THUẬT 3D
 
 **Đơn vị:** TRƯỜNG THCS NAM NHA TRANG – PHÂN HIỆU VĨNH TRƯỜNG.

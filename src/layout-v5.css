@@ -1,0 +1,194 @@
+/* V5: Docked panels, never cover the circuit/robot. TV and laptop first. */
+.vision-v5{height:100dvh;min-height:0;overflow:hidden}
+.vision-v5 .portal-header{position:relative;flex:0 0 64px;height:64px;min-height:64px;padding:5px clamp(12px,1.5vw,24px);gap:clamp(10px,1.3vw,20px);z-index:50}
+.vision-v5 .portal-header-identity{flex:0 1 330px;min-width:240px;max-width:340px}
+.vision-v5 .portal-header-identity .school-identity{gap:10px}
+.vision-v5 .portal-header-identity .school-emblem{width:42px;height:42px;flex:0 0 42px}
+.vision-v5 .portal-header-identity .school-ident-text{gap:2px}
+.vision-v5 .portal-header-identity .school-ident-text strong{font-size:clamp(10px,.8vw,13px);line-height:1.2}
+.vision-v5 .portal-header-identity .school-ident-text span{font-size:10px;line-height:1.2;color:var(--muted)}
+.vision-v5 .school-upload{padding:6px;border-radius:7px;min-width:30px;min-height:31px;justify-content:center}
+.vision-v5 .portal-header-project{min-width:0;flex:1;align-items:center;text-align:center;gap:4px}
+.vision-v5 .portal-header-project strong{font-size:clamp(13px,1.14vw,20px);line-height:1.24;letter-spacing:.15px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.vision-v5 .portal-header-project small{font-size:clamp(9px,.63vw,11px);line-height:1.2;letter-spacing:.1px;color:var(--muted);white-space:nowrap}
+.vision-v5 .portal-header-actions{gap:7px;flex:0 0 auto}
+.vision-v5 .portal-header-actions>button{padding:0;min-width:38px;height:38px;display:grid;place-items:center}
+.vision-v5 .portal-nav{flex:0 0 42px;height:42px;min-height:0;padding:3px 12px;gap:6px;z-index:20}
+.vision-v5 .portal-nav button{min-height:34px;padding:4px;font-size:11px}
+.vision-v5 .portal-nav-no{font-size:9px}
+.vision-v5 .portal-current{display:none}
+.vision-v5 .portal-content{flex:1;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden}
+.vision-v5 .portal-footer{flex:0 0 auto;padding:12px 20px}
+.vision-v5.visual-zone-active .portal-content{overflow:hidden;display:flex;flex-direction:column}
+.vision-v5.visual-zone-active .portal-footer{display:none}
+.vision-v5.visual-zone-active .flat-section,.vision-v5.visual-zone-active .embedded-workbench{padding:0;width:100%;min-height:0;flex:1;overflow:hidden}
+/* Workbench 3D: no controls or explanatory overlays inside the canvas. */
+.vision-v5 .embedded-workbench>.app-root{height:100%;min-height:0;max-height:100%;overflow:hidden}
+.vision-v5 .embedded-workbench>.app-root>.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 360px;overflow:hidden}
+.vision-v5 .embedded-workbench>.app-root.workbench-sidebar-collapsed>.workspace{grid-template-columns:minmax(0,1fr)}
+.vision-v5 .embedded-workbench .side-panel.sidebar-hidden{display:none}
+.vision-v5 .embedded-workbench .viewport-pane{min-height:0;min-width:0;display:flex;flex-direction:column;padding:9px 12px 5px;gap:8px;overflow:hidden}
+.vision-v5 .embedded-workbench .viewport-heading{min-height:39px;flex:0 0 auto;align-items:center}
+.vision-v5 .embedded-workbench .viewport-heading h1{font-size:clamp(17px,1.35vw,24px);margin:3px 0 0}
+.vision-v5 .embedded-workbench .eyebrow{font-size:9px}
+.vision-v5 .embedded-workbench .canvas-stage{flex:1 1 auto;min-height:160px;height:auto!important;max-height:none;border-radius:11px;box-shadow:none;overflow:hidden}
+.vision-v5 .embedded-workbench .scene-toolbar-docked{display:flex;flex-direction:column;flex:0 0 auto;gap:6px;padding:0;min-width:0}
+.vision-v5 .embedded-workbench .stage-topbar{position:static;display:flex;align-items:center;min-height:37px;gap:10px;pointer-events:auto;justify-content:space-between}
+.vision-v5 .embedded-workbench .stage-breadcrumb{background:var(--surface2);border:1px solid var(--line);color:var(--muted);padding:6px 10px}
+.vision-v5 .embedded-workbench .stage-top-actions button{height:32px;border:1px solid var(--line);background:var(--surface2);color:var(--ink)}
+.vision-v5 .embedded-workbench .quick-presets{position:static;display:flex;flex-direction:row;gap:5px;min-width:0;overflow-x:auto;padding:0 0 2px;scrollbar-width:thin}
+.vision-v5 .embedded-workbench .quick-presets button{min-width:0;flex:0 0 auto;padding:6px 9px;font-size:10px;background:var(--surface2);color:var(--muted);border:1px solid var(--line)}
+.vision-v5 .embedded-workbench .quick-presets button.active{background:#145bb0;color:#fff}
+.vision-v5 .embedded-workbench .stage-hint{position:static;font-size:10px;color:var(--muted);padding-left:3px;min-height:15px}
+.vision-v5 .embedded-workbench .viewer-controls{display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;align-items:center;padding:7px 10px;flex:0 0 auto;border-radius:9px}
+.vision-v5 .embedded-workbench .explode-control{flex:1 1 270px;min-width:210px}
+.vision-v5 .embedded-workbench .viewer-toggle-row{flex:1 1 360px;justify-content:flex-end;gap:5px;flex-wrap:wrap}
+.vision-v5 .embedded-workbench .toggle-pill{font-size:10px;padding:7px 9px;gap:5px}
+.vision-v5 .embedded-workbench .bottom-notice{display:none}
+.vision-v5 .embedded-workbench .side-panel{min-height:0;max-height:none;display:flex;flex-direction:column;overflow:hidden}
+.vision-v5 .embedded-workbench .side-scroll{min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain}
+.vision-v5 .embedded-workbench .stage-info-card{position:static;display:flex;width:auto;max-width:none;padding:12px;border-radius:10px;margin:4px 0 16px;box-shadow:none;background:var(--surface2);color:var(--ink);backdrop-filter:none}
+.vision-v5 .embedded-workbench .stage-info-card p{color:var(--ink);line-height:1.5;font-size:12px}
+.vision-v5 .embedded-workbench .sidebar-dock-toggle{font-size:10px;font-weight:800;color:var(--ink);background:var(--surface2);border:1px solid var(--line);border-radius:7px;padding:7px;flex:0 0 auto}
+.vision-v5 .embedded-workbench .workbench-inline-status{min-height:44px;flex:0 0 44px;border-top:1px solid var(--line);background:var(--surface);display:flex;align-items:center;gap:11px;padding:5px 14px;font-size:12px;min-width:0}
+.vision-v5 .embedded-workbench .workbench-inline-status strong{color:var(--accent);white-space:nowrap}
+.vision-v5 .embedded-workbench .workbench-inline-status span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.vision-v5 .embedded-workbench .workbench-inline-status button{border:1px solid var(--line);background:var(--surface3);color:var(--ink);border-radius:7px;padding:5px 10px;white-space:nowrap}
+/* Flat board: main SVG consumes ONLY its grid cell. All tools and meter are docked. */
+.vision-v5 .flat-layout-root{height:100%;max-height:100%;min-height:0;border-radius:0;box-shadow:none;border:0;overflow:hidden}
+.vision-v5 .flat-heading{flex:0 0 auto;min-height:54px;padding:7px 14px}
+.vision-v5 .flat-head-main{gap:9px}.vision-v5 .flat-signal-mark{width:36px;height:36px;border-radius:8px}
+.vision-v5 .flat-head-main span{font-size:9px;letter-spacing:.8px}
+.vision-v5 .flat-head-main h2{font-size:clamp(14px,1.25vw,21px);margin:2px 0}.vision-v5 .flat-head-main p{display:none}
+.vision-v5 .flat-main-actions button{min-height:35px;font-size:11px}
+.vision-v5 .flat-filterbar{flex:0 0 auto;min-height:45px;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding:4px 10px;scrollbar-width:thin}
+.vision-v5 .flat-filter-chip{white-space:nowrap;flex:0 0 auto;min-height:34px;padding:0 9px;font-size:11px}
+.vision-v5 .flat-filter-count{margin-left:auto}
+.vision-v5 .flat-content{display:grid;grid-template-columns:minmax(0,1fr) 360px;flex:1;min-height:0;overflow:hidden}
+.vision-v5 .flat-content.flat-no-inspector{grid-template-columns:minmax(0,1fr)}
+.vision-v5 .flat-visual-column{min-height:0;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.vision-v5 .flat-controls-docked{display:flex;align-items:center;justify-content:space-between;min-height:45px;flex:0 0 auto;padding:5px 10px;gap:8px;background:#101d29;border-bottom:1px solid #34506b}
+.vision-v5 .flat-stage-mark{position:static;min-width:0;letter-spacing:.2px;font-size:10px;padding:5px 8px;box-shadow:none;pointer-events:auto;white-space:nowrap}
+.vision-v5 .flat-canvas-tools{position:static;display:flex;flex-direction:row;gap:5px}
+.vision-v5 .flat-canvas-tools button{height:33px;width:34px;border-radius:7px;box-shadow:none}
+.vision-v5 .flat-board-stage{min-height:0;height:auto;max-height:none;flex:1;overflow:hidden}
+.vision-v5 .flat-board-svg{height:100%;width:100%;display:block}
+.vision-v5 .flat-bottom-docked{position:static;flex:0 0 27px;min-height:27px;padding:5px 13px;background:#101d29;border-top:1px solid #34506b;font-size:10px}
+.vision-v5 .flat-inspector{height:auto;max-height:none;min-height:0;border-left:1px solid #43607a;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain}
+.vision-v5 .flat-inspector.sidebar-hidden{display:none}
+.vision-v5 .flat-inspector .flat-inspector-list{flex:0 1 auto;min-height:120px;max-height:35vh;overflow-y:auto}
+.vision-v5 .flat-inspector-top{padding:11px 12px}
+.vision-v5 .flat-route-card{padding:10px 12px}
+.vision-v5 .flat-route-endpoints>div{padding:7px;overflow-wrap:anywhere}
+.vision-v5 .flat-route-endpoints b{font-size:19px}
+.vision-v5 .flat-meter{position:static;z-index:auto;display:block;flex:0 0 auto;margin:10px 12px;border:2px solid #e2b646;box-shadow:none;width:auto;max-width:none;border-radius:11px;padding:8px}
+.vision-v5 .flat-meter-lcd{height:58px;margin-top:5px;grid-template-columns:1fr auto 22px}
+.vision-v5 .flat-meter-lcd b{font-size:32px}
+.vision-v5 .flat-meter-probes,.vision-v5 .flat-meter-result{display:none}
+.vision-v5 .flat-meter-choice{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:6px}
+.vision-v5 .flat-meter-choice button{font-size:9px;padding:5px 2px;line-height:1.25}
+.vision-v5 .flat-power-toggle{padding:7px 5px;font-size:10px;margin-top:5px}
+.vision-v5 .flat-inspector .flat-mobile-handle{display:none}
+.vision-v5 .flat-collapsed-status{min-height:44px;flex:0 0 44px;background:#102d45;display:flex;align-items:center;gap:11px;padding:6px 13px;border-top:1px solid #4c7186;font-size:12px}
+.vision-v5 .flat-collapsed-status b{color:#ffd486;white-space:nowrap}
+.vision-v5 .flat-collapsed-status span{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.vision-v5 .flat-collapsed-status button{background:#275d7b;border:1px solid #69a3c4;border-radius:7px;padding:6px 11px;color:#fff}
+.vision-v5 .flat-footerbar{flex:0 0 auto;min-height:26px;padding:4px 12px;font-size:10px}
+/* Fullscreen keeps a single header and no sudden jump to a scrollable page. */
+.vision-v5:fullscreen{height:100dvh;width:100vw}
+.vision-v5 .flat-layout-root:fullscreen{height:100dvh;max-height:none}
+/* No moving texts/cards may cover the interactive scene. */
+.vision-v5 .canvas-stage>.stage-topbar,.vision-v5 .canvas-stage>.quick-presets,.vision-v5 .canvas-stage>.stage-info-card,.vision-v5 .canvas-stage>.stage-hint,.vision-v5 .flat-board-stage>.flat-meter,.vision-v5 .flat-board-stage>.flat-canvas-tools{display:none!important}
+@media(max-width:1100px){
+ .vision-v5 .portal-header-identity{flex-basis:260px;min-width:205px}
+ .vision-v5 .school-upload span{display:none}
+ .vision-v5 .portal-header-project strong{font-size:13px}
+ .vision-v5 .embedded-workbench>.app-root>.workspace,.vision-v5 .flat-content{grid-template-columns:minmax(0,1fr) 310px}
+}
+@media(max-width:850px){
+ .vision-v5 .portal-header{height:60px;min-height:60px;flex-basis:60px;padding:5px 8px;gap:5px}
+ .vision-v5 .portal-header-identity{min-width:0;flex:1 1 auto;max-width:unset}
+ .vision-v5 .portal-header-identity .school-emblem{width:39px;height:39px;flex-basis:39px}
+ .vision-v5 .portal-header-identity .school-ident-text strong{font-size:10px}
+ .vision-v5 .portal-header-identity .school-ident-text span{font-size:9px}
+ .vision-v5 .portal-header-project{display:none}
+ .vision-v5 .portal-header-actions>button{min-width:35px;height:35px}
+ .vision-v5 .portal-nav{height:43px;flex-basis:43px;display:flex;overflow-x:auto;padding:4px 6px;gap:4px;scrollbar-width:thin}
+ .vision-v5 .portal-nav button{flex:0 0 auto;min-width:103px;font-size:10px}
+ .vision-v5 .embedded-workbench>.app-root>.workspace{display:flex;flex-direction:column}
+ .vision-v5 .embedded-workbench .viewport-pane{flex:1;min-height:0;padding:6px;gap:5px}
+ .vision-v5 .embedded-workbench .viewport-heading{min-height:26px}
+ .vision-v5 .embedded-workbench .viewport-heading h1{font-size:15px;margin:0}
+ .vision-v5 .embedded-workbench .eyebrow,.vision-v5 .embedded-workbench .view-pill{display:none}
+ .vision-v5 .embedded-workbench .stage-topbar{min-height:30px}
+ .vision-v5 .embedded-workbench .stage-breadcrumb{display:none}
+ .vision-v5 .embedded-workbench .quick-presets button{font-size:9px;padding:5px 7px}
+ .vision-v5 .embedded-workbench .stage-hint{display:none}
+ .vision-v5 .embedded-workbench .viewer-controls{flex-direction:column;align-items:stretch;padding:5px;gap:5px}
+ .vision-v5 .embedded-workbench .explode-control,.vision-v5 .embedded-workbench .viewer-toggle-row{flex:0 0 auto;min-width:0}
+ .vision-v5 .embedded-workbench .viewer-toggle-row{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}
+ .vision-v5 .embedded-workbench .toggle-pill{font-size:9px;padding:5px}
+ .vision-v5 .embedded-workbench .controller-tiny{display:none}
+ .vision-v5 .embedded-workbench .side-panel{flex:0 0 44px;min-height:44px;max-height:44px;overflow:hidden;border-left:0;border-top:1px solid var(--line);position:relative;bottom:auto;border-radius:0;z-index:auto}
+ .vision-v5 .embedded-workbench .side-panel.mobile-open{flex:0 0 min(45dvh,380px);max-height:min(45dvh,380px)}
+ .vision-v5 .embedded-workbench .side-handle{display:flex;min-height:44px;position:relative;top:auto;z-index:auto}
+ .vision-v5 .embedded-workbench .side-scroll{overflow-y:auto}
+ .vision-v5 .flat-heading{min-height:42px;padding:4px 9px}
+ .vision-v5 .flat-main-actions button{min-height:30px;padding:0 7px;font-size:10px}
+ .vision-v5 .flat-filterbar{min-height:40px;padding:3px 5px}
+ .vision-v5 .flat-filter-label{display:none}
+ .vision-v5 .flat-content{display:flex;flex-direction:column;min-height:0}
+ .vision-v5 .flat-visual-column{flex:1;min-height:0}
+ .vision-v5 .flat-controls-docked{min-height:38px;padding:4px 6px}
+ .vision-v5 .flat-canvas-tools button{width:30px;height:30px}
+ .vision-v5 .flat-inspector{flex:0 0 44px;max-height:44px;min-height:44px;border-left:0;border-top:1px solid #43607a;overflow:hidden}
+ .vision-v5 .flat-inspector.mobile-open{flex:0 0 min(42dvh,340px);max-height:min(42dvh,340px);overflow-y:auto}
+ .vision-v5 .flat-inspector .flat-mobile-handle{display:block;min-height:44px;flex:0 0 44px;border:0;background:#183f55;color:#effbff;font-weight:850;font-size:12px;text-align:center}
+ .vision-v5 .flat-footerbar{display:none}
+ .vision-v5 .flat-collapsed-status{font-size:10px}
+ .vision-v5 .flat-collapsed-status span{display:none}
+}
+@media(max-width:520px){
+ .vision-v5 .portal-header-identity .school-ident-text{max-width:170px}
+ .vision-v5 .portal-header-actions{gap:3px}
+ .vision-v5 .portal-header-actions>button{min-width:32px;width:32px;height:32px}
+ .vision-v5 .flat-stage-mark{font-size:8px;padding:4px 5px}
+ .vision-v5 .flat-head-main span{font-size:8px}
+ .vision-v5 .flat-head-main h2{font-size:13px}
+ .vision-v5 .flat-main-actions button{font-size:0;gap:0;min-width:31px}
+ .vision-v5 .flat-main-actions button svg{width:17px}
+ .vision-v5 .flat-meter-choice button{font-size:9px}
+ .vision-v5 .flat-bottom-docked span:nth-child(2){display:none}
+}
+/* Presentation mode uses docked controls and a docked explanation sidebar. */
+.vision-v5 .tv-visual{min-height:0;min-width:0;display:flex;flex-direction:column}
+.vision-v5 .tv-render{flex:1;min-height:0;overflow:hidden}
+.vision-v5 .tv-render-controls{min-height:46px;flex:0 0 auto;background:#0d2941;border-top:1px solid #355b7a;display:flex;align-items:center;justify-content:space-between;gap:9px;padding:5px 10px}
+.vision-v5 .tv-render-controls .tv-canvas-mark{position:static;border:0;background:transparent;padding:0;white-space:nowrap}
+.vision-v5 .tv-render-controls .tv-zoom-toolbar{position:static;display:flex;gap:5px}
+.vision-v5 .tv-render-controls .tv-zoom-toolbar button{min-width:34px;min-height:33px}
+.vision-v5 .tv-render-controls .tv-visual-bottom-actions{position:static;display:flex;gap:5px;max-width:none;align-items:center}
+.vision-v5 .tv-render-controls .tv-visual-bottom-actions button{font-size:11px;min-height:33px;padding:5px 8px}
+.vision-v5 .tv-summary-panel{flex:0 0 360px;width:360px;min-width:0;min-height:0;display:flex;flex-direction:column;gap:12px;padding:22px 16px;overflow-y:auto;border-left:1px solid #52718d;background:#0b2843}
+.vision-v5 .tv-summary-panel>span{color:#83d9f8;font-size:12px;font-weight:800;letter-spacing:.4px}
+.vision-v5 .tv-summary-panel>strong{font-size:clamp(21px,1.5vw,29px);line-height:1.4}
+.vision-v5 .tv-summary-panel>p{font-size:clamp(13px,1vw,17px);line-height:1.6;color:#e0ebf4}
+.vision-v5 .tv-summary-hint{padding:14px;border-radius:8px;border:1px solid #466b8c;background:#153b59;font-size:12px;line-height:1.5}
+.vision-v5 .tv-live-docked{padding:17px 10px;border:1px solid #4ccab8;border-radius:10px;background:#104d60;display:flex;flex-direction:column;gap:12px;text-align:center}
+.vision-v5 .tv-live-docked strong{color:#ffdf84;font-size:26px}.vision-v5 .tv-live-docked span{font-size:14px;font-weight:850}
+.vision-v5 .tv-notes-drawer{position:static;flex:0 0 360px;width:360px;max-width:none;min-height:0;min-width:0;border-radius:0;border:0;border-left:1px solid #4d86a9;box-shadow:none;overflow-y:auto}
+.vision-v5 .tv-notes-drawer .tv-drawer-heading{top:0}
+.vision-v5 .tv-wire-panel{width:360px;flex-basis:360px}
+.vision-v5 .tv-brand .school-identity .school-ident-text{display:none}
+.vision-v5 .tv-brand .school-identity .school-emblem{width:43px;height:43px;flex-basis:43px;border-radius:50%}
+@media(max-width:1100px){
+ .vision-v5 .tv-summary-panel,.vision-v5 .tv-notes-drawer{width:310px;flex-basis:310px}
+ .vision-v5 .tv-wire-panel{width:310px;flex-basis:310px}
+ .vision-v5 .tv-render-controls .tv-canvas-mark{display:none}
+}
+@media(max-width:850px){
+ .vision-v5 .tv-render-controls{min-height:42px;gap:5px;flex-wrap:wrap;justify-content:center}
+ .vision-v5 .tv-render-controls .tv-visual-bottom-actions button{font-size:10px;padding:5px}
+ .vision-v5 .tv-summary-panel,.vision-v5 .tv-notes-drawer{width:100%;max-width:none;min-height:150px;max-height:35dvh;flex:0 0 auto;border-top:1px solid #52718d;border-left:0;padding:12px}
+ .vision-v5 .tv-render{height:min(49dvh,550px);flex:none}
+}

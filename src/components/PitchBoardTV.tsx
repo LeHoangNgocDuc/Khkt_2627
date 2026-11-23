@@ -5,6 +5,7 @@ import {
   RotateCcw, ShieldAlert, X, type LucideIcon,
 } from 'lucide-react';
 import { Circuit2D } from './Circuit2D';
+import { SchoolIdentity } from './SchoolIdentity';
 import { PresentationPanel } from './PresentationPanel';
 import { PRESENTATION_SLIDES } from '../data/presentationData';
 import { CAMPUS_NAME, PROJECT_NAME, SCHOOL_NAME } from '../data/identity';
@@ -148,7 +149,7 @@ export function PitchBoardTV({dark, onExit}:{dark:boolean;onExit:()=>void}) {
   };
   return <section className={`presentation-zone tv-pitch ${isTV?'tv-stage-active':'tv-page-mode'}`}>
     <div className="tv-top">
-      <div className="tv-brand"><span className="tv-brand-mark">V</span><div>
+      <div className="tv-brand"><SchoolIdentity compact/><div>
         <strong>VISIONBOT <span>3D</span></strong><small>{SCHOOL_NAME} • {CAMPUS_NAME}</small>
       </div></div>
       <div className="tv-step-heading"><span>PHẦN {slide+1} / 7</span><strong>{current.title}</strong></div>
@@ -171,7 +172,8 @@ export function PitchBoardTV({dark, onExit}:{dark:boolean;onExit:()=>void}) {
               status={slide===5?'Đang truyền dữ liệu AI...':'VisionBot - Sẵn sàng'} dark={isTV||dark}
               onSelectPart={focusPart} onSelectWire={handleOnWire}
               onPinSelect={handleOnPin} onBackground={()=>{setSelectedPart(null);}}/>}
-          <div className="tv-canvas-mark">{show2D?'SƠ ĐỒ 2D':'MÔ HÌNH 3D'} <b>• MINH HỌA KỸ THUẬT</b></div>
+        </div>
+        <div className="tv-render-controls">          <div className="tv-canvas-mark">{show2D?'SƠ ĐỒ 2D':'MÔ HÌNH 3D'} <b>• MINH HỌA KỸ THUẬT</b></div>
           <div className="tv-zoom-toolbar" aria-label="Điều khiển góc nhìn">
             <button onClick={()=>changeZoom(.15)} title="Phóng to (+)"><Plus size={21}/></button>
             <button onClick={()=>changeZoom(-.15)} title="Thu nhỏ (-)"><Minus size={21}/></button>
@@ -184,12 +186,6 @@ export function PitchBoardTV({dark, onExit}:{dark:boolean;onExit:()=>void}) {
             <button onClick={()=>setPresetOverride('overview')}><Cpu size={17}/> Toàn cảnh</button>
             <button onClick={()=>setPresetOverride('pins')}>Soi GPIO</button>
           </div>
-          {!wiringMode&&<div className="tv-summary-overlay">
-            <span>BƯỚC {slide+1} – {current.subtitle}</span>
-            <strong>{selectedPart?PARTS[selectedPart].title:current.title}</strong>
-            <p>{selectedPart?PARTS[selectedPart].pitch:current.points.join('  •  ')}</p>
-          </div>}
-          {slide===6&&<div className="tv-live"><strong>LIVE DEMO</strong><span>MỜI BAN GIÁM KHẢO TRẢI NGHIỆM TRÊN VISIONBOT THẬT</span></div>}
         </div>
         {wiringMode&&<div className="tv-connection-ribbon">
           <div className="tv-connect-head"><span className="tv-route-identifier" style={{borderColor:wire?.color}}>{wire?.id}</span>
@@ -203,7 +199,7 @@ export function PitchBoardTV({dark, onExit}:{dark:boolean;onExit:()=>void}) {
           {wire?.warning&&<div className="tv-specific-warning"><ShieldAlert size={17}/>{wire.warning}</div>}
         </div>}
       </div>
-      {wiringMode&&<aside className="tv-wire-panel" aria-label="Bảng dây nối phóng to">
+      {wiringMode&&!notesOpen&&<aside className="tv-wire-panel" aria-label="Bảng dây nối phóng to">
         <div className="tv-wire-panel-heading"><span>PHÒNG SOI CHÂN GPIO</span><strong>ĐẤU NỐI TỪNG DÂY</strong><small>Chọn một nhóm, sau đó chọn sợi dây. Mô hình 3D sẽ làm sáng đúng đường nối.</small></div>
         <div className="tv-groups">{GROUPS.map(item=>{const Icon=item.icon;return <button key={item.id} onClick={()=>chooseGroup(item.id)} className={group===item.id?'active':''} style={{'--grp-color':WIRE_GROUPS[item.id].color} as CSSProperties}><Icon size={16}/>{item.short}</button>;})}</div>
         <div className="tv-wires-heading"><b>{WIRE_GROUPS[group].label.toUpperCase()}</b><span>{filtered.length} dây</span></div>
@@ -211,6 +207,13 @@ export function PitchBoardTV({dark, onExit}:{dark:boolean;onExit:()=>void}) {
         <div className="tv-wires-foot"><button onClick={()=>{const i=filtered.findIndex(x=>x.id===wire?.id);focusWire(filtered[(i-1+filtered.length)%filtered.length]?.id??'');}}><ArrowLeft size={16}/> Dây trước</button><button onClick={()=>{const i=filtered.findIndex(x=>x.id===wire?.id);focusWire(filtered[(i+1)%filtered.length]?.id??'');}}>Dây tiếp <ArrowRight size={16}/></button></div>
         <button className="tv-show-safety" onClick={()=>setShowSafety(v=>!v)}><ShieldAlert size={18}/> {showSafety?'Ẩn':'Xem'} 5 nguyên tắc an toàn {showSafety?<ChevronUp size={16}/>:<ChevronDown size={16}/>}</button>
         {showSafety&&<div className="tv-safety-detail"><p>Không cấp 5V vào 3V3; không nối pin trực tiếp 5V; hai cực loa không nối GND; không dùng microSD cùng GPIO38/39/40; không vừa sạc vừa chạy với TP4056 thường.</p></div>}
+      </aside>}
+      {!wiringMode&&!notesOpen&&<aside className="tv-summary-panel" aria-label="Thông tin thuyết trình đang trình chiếu">
+        <span>BƯỚC {slide+1} – {current.subtitle}</span>
+        <strong>{selectedPart?PARTS[selectedPart].title:current.title}</strong>
+        <p>{selectedPart?PARTS[selectedPart].pitch:current.points.join(' • ')}</p>
+        {slide===6&&<div className="tv-live-docked"><strong>LIVE DEMO</strong><span>MỜI BAN GIÁM KHẢO TRẢI NGHIỆM TRÊN VISIONBOT THẬT</span></div>}
+        <div className="tv-summary-hint">Chọn trực tiếp linh kiện trên mô hình để xem giải thích.</div>
       </aside>}
       {notesOpen&&<aside className="tv-notes-drawer"><div className="tv-drawer-heading"><strong>LỜI THUYẾT TRÌNH & PHẢN BIỆN</strong><button onClick={()=>setNotesOpen(false)}><X size={19}/></button></div><PresentationPanel slide={slide} onSlide={go}
         onFocus={focusPart} onFullscreen={toggleFullscreen} seconds={seconds} playing={playing}
