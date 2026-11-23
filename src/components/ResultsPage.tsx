@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AlertTriangle, BarChart3, Check, Download, Edit3, FileSpreadsheet, RotateCcw, Save, X } from 'lucide-react';
+import { AlertTriangle, BarChart3, Download, Edit3, FileSpreadsheet, RotateCcw, Save, X } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import {
   costTotal, DEFAULT_RESEARCH_RESULTS, loadResearch, money, RESEARCH_LABEL, saveResearch,
