@@ -26,7 +26,12 @@ const CAMERA_X = -2.23;
 const CAMERA_Y = 0.68;
 const VENT_X = [-2.72, -2.24, -1.76];
 
-function roundPath(path: Shape | Path, x: number, y: number, w: number, h: number, r: number, clockwise = false) {
+// Preserve the concrete Three.js type: Shape for the front panel, Path for cut-outs.
+// Without a generic return type, TypeScript widens the result to Path | Shape,
+// which breaks Shape.holes and ExtrudeGeometry (TS2339 / TS2345).
+function roundPath<T extends Shape | Path>(
+  path: T, x: number, y: number, w: number, h: number, r: number, clockwise = false,
+): T {
   const left = x - w / 2;
   const right = x + w / 2;
   const bottom = y - h / 2;
