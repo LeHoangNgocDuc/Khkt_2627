@@ -149,3 +149,11 @@
 @media(max-width:550px){.principle-v6-bottom{grid-template-columns:1fr}}
 /* Đúng bốn cột; V5 trước đó vẫn giữ grid 7 cột. */
 @media(min-width:851px){.vision-v6 .portal-nav{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* V7: Industrial studio product showcase, controls stay docked outside WebGL. */
+.model-v7-eyebrow { font-size: 11px; color: #79c9ff; font-weight: 900; letter-spacing: .9px; margin-bottom: 11px; }
+.model-v6-stage > canvas { display: block; width: 100%; min-height: 0; touch-action: none; }
+.model-v6-stage { background: radial-gradient(ellipse at 55% 40%, #173858 0%, #071324 72%); }
+.model-v6-stage .model-v6-docked-controls { box-shadow: 0 -8px 28px #07132455; }
+.model-v6-inspector-scroll { scrollbar-color: #3d6e91 #0d2138; }
+.model-v6-part-list button:hover { background: #1d476b; border-color: #80c8f4; }
+.model-v6-options button:focus-visible,.model-v6-part-list button:focus-visible,.model-v6-docked-controls button:focus-visible { outline: 2px solid #a1e7ff; outline-offset: 2px; }

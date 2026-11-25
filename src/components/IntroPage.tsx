@@ -4,8 +4,9 @@ import { PROJECT_NAME } from '../data/identity';
 
 interface Props {onExplore:()=>void;onWiring:()=>void;onPrinciple:()=>void;}
 const PHOTOS=[
-  {src:'/images/visionbot-thuc-te-1.png',caption:'Ảnh thực tế: vỏ trắng in 3D, camera, màn hình TFT và khe đèn trạng thái'},
-  {src:'/images/visionbot-thuc-te-2.png',caption:'Ảnh thực tế: VisionBot đang chụp ảnh và gửi yêu cầu xử lý'},
+  {src:'/images/visionbot-thuc-te-1.png',caption:'Ảnh thực tế: vỏ trắng in 3D, camera, màn hình TFT và khe đèn trạng thái',studio:false},
+  {src:'/images/visionbot-thuc-te-2.png',caption:'Ảnh thực tế: VisionBot đang chụp ảnh và gửi yêu cầu xử lý',studio:false},
+  {src:'/images/visionbot-studio-concept.png',caption:'Phối cảnh công nghiệp tham khảo: mẫu vỏ ABS trắng nâng cấp (hình ảnh thiết kế, không phải ảnh thiết bị thật)',studio:true},
 ];
 export function IntroPage({onExplore,onWiring,onPrinciple}:Props){
   const [photo,setPhoto]=useState(0);
@@ -24,11 +25,11 @@ export function IntroPage({onExplore,onWiring,onPrinciple}:Props){
         <div className="hero-metrics"><span><Cpu size={17}/> ESP32-S3-CAM</span><span><Camera size={17}/> Camera FPC</span><span><AudioLines size={17}/> Giao tiếp giọng nói</span></div>
       </div>
       <figure className="hero-photo-panel">
-        <div className="hero-photo-tag"><Image size={15}/> ẢNH CHỤP SẢN PHẨM THỰC TẾ</div>
+        <div className="hero-photo-tag"><Image size={15}/> {PHOTOS[photo].studio ? "PHỐI CẢNH THIẾT KẾ – MINH HỌA" : "ẢNH CHỤP SẢN PHẨM THỰC TẾ"}</div>
         <img src={PHOTOS[photo].src} alt={PHOTOS[photo].caption} decoding="async"/>
         <figcaption>{PHOTOS[photo].caption}</figcaption>
         <div className="hero-photo-switch" role="group" aria-label="Chọn ảnh sản phẩm">
-          {PHOTOS.map((item,i)=><button key={item.src} className={photo===i?'active':''} onClick={()=>setPhoto(i)} aria-pressed={photo===i}>Góc nhìn {i+1}</button>)}
+          {PHOTOS.map((item,i)=><button key={item.src} className={photo===i?'active':''} onClick={()=>setPhoto(i)} aria-pressed={photo===i}>{item.studio ? "Phối cảnh studio" : `Ảnh thật ${i+1}`}</button>)}
         </div>
       </figure>
     </div>

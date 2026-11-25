@@ -1,0 +1,26 @@
+VISIONBOT V7.0 - MO HINH STUDIO 3D (4 PHAN KHU)
+
+1) Giai nen tep ZIP. Mo thu muc visionbot-3d, sao che CAC TEP BEN TRONG vao thu muc goc repository Khkt_2627.
+2) Giu nguyen file Logo.jpg tren GitHub (neu da co).
+3) Cam ket (Commit) len nhanh main va theo doi Vercel Deployments.
+4) Neu Vercel bao loi TypeScript, sao che dong loi dau tien trong Build Logs.
+5) Mo website, chon muc 02 -> Mat ngoai 3D. Co the click camera, man hinh, ba khe LED, nut nhan va bat Tu xoay.
+6) Chon Tach lop linh kien de xem bo ESP32, pin, micro, loa. Chon Dau noi o menu chinh de soi tung duong day.
+7) O muc anh, hai anh dau la anh thiet bi THAT, anh thu 3 la PHOI CANH THIET KE KHONG PHAI ANH THAT.
+
+Cac tep thay doi chinh:
+- src/scene/VisionBotStudioModel.tsx (moi)
+- src/components/ModelPage.tsx
+- src/components/IntroPage.tsx
+- src/refocus-v6.css
+- public/images/visionbot-studio-concept.png (moi)
+
+Kiem tra tai may tinh:
+  npm install
+  npm run check:source
+  npm run check:connections
+  npm run check:layout
+  npm run build
+  npm run dev
+
+Khong bat buoc backend/API key. Mo hinh ngoai la phoi canh 3D nham nang cap tham my, khong phai ban CAD da do kich thuoc.
