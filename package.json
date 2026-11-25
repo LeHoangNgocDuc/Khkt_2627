@@ -1,7 +1,7 @@
 {
   "name": "visionbot-3d-stem-lab",
   "private": true,
-  "version": "5.0.0",
+  "version": "6.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -9,7 +9,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "check:connections": "node scripts/check-circuit.mjs",
-    "check:layout": "node scripts/check-layout.mjs"
+    "check:layout": "node scripts/check-layout.mjs",
+    "check:source": "node scripts/check-source.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.0",

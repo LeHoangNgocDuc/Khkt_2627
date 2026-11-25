@@ -197,7 +197,7 @@ export default function Workbench({initialTab='structure',initialDark=true,onOpe
             <div className="stage-top-actions">
               {onOpenTV&&<button onClick={onOpenTV} className="tv-launch-button" title="Trình chiếu toàn màn hình trên TV hoặc laptop"><Maximize2 size={16}/> TRÌNH CHIẾU TV</button>}
               <button onClick={()=>setPrefer2D(v=>!v)} title="Chuyển mô hình 3D / sơ đồ 2D"><CircuitBoard size={16}/>{webgl?'2D':'3D'}</button>
-              <button onClick={()=>setPresent(v=>!v)} title="Chế độ thuyết trình"><Maximize2 size={16}/></button>
+              
               <button onClick={setFullscreen} title="Toàn màn hình"><Fullscreen size={16}/></button>
             </div>
           </div>

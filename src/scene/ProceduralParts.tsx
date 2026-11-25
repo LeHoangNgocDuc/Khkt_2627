@@ -220,17 +220,17 @@ function ShellFront({p}:{p:ModelProps}){
   const opacity=p.xray?.14:.79;
   return <group>
     {/* Four rounded side rails make openings visible instead of blocking screen/camera. */}
-    <RoundedBox args={[.34,6.8,.34]} position={[-2.05,0,0]} radius={.13}><Mat color="#1d63dc" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
-    <RoundedBox args={[.34,6.8,.34]} position={[2.05,0,0]} radius={.13}><Mat color="#1d63dc" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
-    <RoundedBox args={[4.22,.36,.35]} position={[0,3.29,0]} radius={.14}><Mat color="#1d63dc" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
-    <RoundedBox args={[4.22,.36,.35]} position={[0,-3.28,0]} radius={.14}><Mat color="#1d63dc" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
-    <RoundedBox args={[4.0,.42,.27]} position={[0,1.72,-.04]} radius={.10}><Mat color="#2563eb" dim={p.dimmed} opacity={opacity}/></RoundedBox>
-    <RoundedBox args={[4.0,.42,.27]} position={[0,-1.62,-.04]} radius={.10}><Mat color="#2563eb" dim={p.dimmed} opacity={opacity}/></RoundedBox>
+    <RoundedBox args={[.34,6.8,.34]} position={[-2.05,0,0]} radius={.13}><Mat color="#e8edf2" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
+    <RoundedBox args={[.34,6.8,.34]} position={[2.05,0,0]} radius={.13}><Mat color="#e8edf2" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
+    <RoundedBox args={[4.22,.36,.35]} position={[0,3.29,0]} radius={.14}><Mat color="#e8edf2" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
+    <RoundedBox args={[4.22,.36,.35]} position={[0,-3.28,0]} radius={.14}><Mat color="#e8edf2" dim={p.dimmed} roughness={.45} opacity={opacity}/></RoundedBox>
+    <RoundedBox args={[4.0,.42,.27]} position={[0,1.72,-.04]} radius={.10}><Mat color="#f4f6f7" dim={p.dimmed} opacity={opacity}/></RoundedBox>
+    <RoundedBox args={[4.0,.42,.27]} position={[0,-1.62,-.04]} radius={.10}><Mat color="#f4f6f7" dim={p.dimmed} opacity={opacity}/></RoundedBox>
     {[-1.83,1.83].flatMap(x=>[-2.99,2.98].map(y=><Screw key={`${x}-${y}`} x={x} y={y}/>))}
-    <mesh position={[-1.07,1.72,.25]} rotation={[0,0,0]}><torusGeometry args={[.42,.09,14,40]}/><Mat color="#74a5f5" dim={p.dimmed} opacity={opacity}/></mesh>
+    <mesh position={[-1.07,1.72,.25]} rotation={[0,0,0]}><torusGeometry args={[.42,.09,14,40]}/><Mat color="#b1bbc6" dim={p.dimmed} opacity={opacity}/></mesh>
     <RoundedBox args={[2.13,2.35,.11]} position={[.7,.60,.2]} radius={.12}><Mat color="#102647" dim={p.dimmed} opacity={opacity}/></RoundedBox>
     {Array.from({length:3},(_,i)=>Array.from({length:4},(_,j)=><mesh key={`${i}-${j}`} position={[-1.32+j*.18,-1.26+i*.18,.17]}><cylinderGeometry args={[.05,.05,.02,6]}/><Mat color="#07152e" dim={p.dimmed} opacity={opacity}/></mesh>))}
-    <mesh position={[0,-2.37,.24]}><torusGeometry args={[.48,.10,14,40]}/><Mat color="#74a5f5" dim={p.dimmed} opacity={opacity}/></mesh>
+    <mesh position={[0,-2.37,.24]}><torusGeometry args={[.48,.10,14,40]}/><Mat color="#b1bbc6" dim={p.dimmed} opacity={opacity}/></mesh>
   </group>;
 }
 function ShellMiddle({p}:{p:ModelProps}){
@@ -246,7 +246,7 @@ function ShellMiddle({p}:{p:ModelProps}){
 function ShellBack({p}:{p:ModelProps}){
   const opacity=p.xray?.11:.55;
   return <group>
-    <RoundedBox args={[4.24,6.7,.18]} radius={.21} position={[0,0,0]}><Mat color="#1856c4" dim={p.dimmed} opacity={opacity}/></RoundedBox>
+    <RoundedBox args={[4.24,6.7,.18]} radius={.21} position={[0,0,0]}><Mat color="#dbe2e9" dim={p.dimmed} opacity={opacity}/></RoundedBox>
     <RoundedBox args={[1.10,.56,.12]} radius={.08} position={[1.15,-2.60,.13]}><Mat color="#0d2858" dim={p.dimmed} opacity={opacity}/></RoundedBox>
     {[-1.81,1.81].flatMap(x=>[-3,3].map(y=><Screw key={`${x}-${y}`} x={x} y={y} z={.20}/>))}
   </group>;

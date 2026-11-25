@@ -1,0 +1,24 @@
+VISIONBOT V6.0 – CẬP NHẬT GITHUB / VERCEL
+
+1. Tải ZIP V6, giải nén.
+2. Mở thư mục visionbot-3d. Đưa TẤT CẢ nội dung của thư mục này lên gốc repo Khkt_2627; giữ nguyên file Logo.jpg đã có trên GitHub.
+3. Commit lên nhánh main. Vercel sẽ tự Deploy nếu repo đang liên kết.
+4. Kiểm tra Vercel Build Logs: npm run build và trạng thái Ready. Nếu thất bại, xem dòng đầu tiên có chữ 'error TS...' và gửi lại để sửa.
+5. Tại website, dùng Ctrl + Shift + R để xóa cache.
+
+Chỉ có 4 phân khu: Giới thiệu – Cấu tạo 3D – Đấu nối – Nguyên lý.
+Tên mới: VISIONBOT – Đôi mắt AI, đồng hành cùng học sinh khiếm thị trên hành trình học tập hòa nhập.
+Ảnh thực tế: public/images/visionbot-thuc-te-1.png và visionbot-thuc-te-2.png.
+
+Đặc biệt: không xóa hoặc thay đổi Logo.jpg ở gốc repo. Nếu hiện logo cũ do máy đã lưu localStorage, hãy dùng nút Đổi logo ở Header.
+
+HƯỚNG DẪN TRÌNH CHIẾU:
+- Trên TV: HDMI, Windows + P, Nhân đôi; bấm P để mở toàn màn hình.
+- Chọn Cấu tạo 3D -> Mặt ngoài 3D -> Tách lớp linh kiện để mô tả chi tiết.
+- Chọn Đấu nối -> nhóm Nguồn / SPI / I2S -> chọn từng dây để trình bày từ chân nào đến chân nào.
+- Chọn Nguyên lý -> sơ đồ khối -> bấm từng bước hoặc Tự động chạy.
+
+KIỂM TRA KỸ THUẬT:
+- Bộ kiểm tra trong ZIP: npm run check:source, npm run check:connections, npm run check:layout.
+- Thực hiện đầy đủ npm install và npm run build trên máy có Internet.
+- 3D và dây nguồn là mô hình giải thích, không thay thế đối chiếu mạch thật và firmware.
